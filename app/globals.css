@@ -1,0 +1,79 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #2A153D;
+  --foreground: #FFFFFF;
+  --card: #1F0F2E;
+  --card-foreground: #FFFFFF;
+  --primary: #D4AF37;
+  --primary-foreground: #1A0A24;
+  --secondary: #3D1F54;
+  --secondary-foreground: #FFFFFF;
+  --muted: #3D1F54;
+  --muted-foreground: #9CA3AF;
+  --accent: #3D1F54;
+  --accent-foreground: #FFFFFF;
+  --destructive: #EF4444;
+  --destructive-foreground: #FFFFFF;
+  --border: #4A2866;
+  --input: #3D1F54;
+  --ring: #D4AF37;
+  --radius: 0.5rem;
+}
+
+@theme inline {
+  --font-sans: 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer components {
+  .text-gold {
+    color: #D4AF37;
+  }
+  @keyframes shimmer-gold {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+  .shimmer-gold {
+    background: linear-gradient(90deg, #D4AF37, #F5E6A3, #D4AF37, #B8962E, #D4AF37);
+    background-size: 200% 100%;
+    animation: shimmer-gold 3s ease-in-out infinite;
+  }
+}
