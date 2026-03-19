@@ -1,19 +1,21 @@
 'use client'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useMemo } from 'react'
 import { MapPin, SlidersHorizontal, Check } from 'lucide-react'
 import { Header } from '@/components/header'
 import { MosaicCard } from '@/components/mosaic-card'
 import { SidebarNavigation } from '@/components/sidebar-navigation'
-import { mockTherapists, filterByNeighborhood, MembershipLevel, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
+import { filterByNeighborhood, searchTherapists, MembershipLevel, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES } from '@/lib/mock-data'
 
 const levelOrder: MembershipLevel[] = [5, 4, 3, 2, 1]
 const FILTER_OPTIONS = [ { id: 'hotel', label: 'CITA HOTEL' }, { id: 'depto', label: 'CITA DEPTO' }, { id: 'domicilio', label: 'CITA DOMICILIO' } ]
+const CATEGORY_OPTIONS = ['Todos', ...SERVICE_CATEGORIES]
 
 export default function HomePage() {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('Todos')
   const [locationInput, setLocationInput] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+  const [selectedCategory, setSelectedCategory] = useState('Todos')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -28,10 +30,10 @@ export default function HomePage() {
     setSelectedFilters(prev => prev.includes(filterId) ? prev.filter(f => f !== filterId) : [...prev, filterId])
   }
 
-  const filteredTherapists = filterByNeighborhood(selectedNeighborhood).filter((t) => {
-    if (locationInput.trim() === '') return true
-    return t.neighborhood.toLowerCase().includes(locationInput.toLowerCase())
-  })
+  const filteredTherapists = useMemo(() => {
+    const byNeighborhood = filterByNeighborhood(selectedNeighborhood)
+    return searchTherapists(byNeighborhood, locationInput, selectedFilters, selectedCategory)
+  }, [selectedNeighborhood, locationInput, selectedFilters, selectedCategory])
 
   const groupedByLevel = levelOrder.reduce((acc, level) => {
     acc[level] = filteredTherapists.filter((t) => t.level === level)
@@ -41,7 +43,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-background scroll-smooth">
       <Header />
-      <SidebarNavigation selectedNeighborhood={selectedNeighborhood} onSelectNeighborhood={setSelectedNeighborhood} onScrollToSection={(level: number) => document.getElementById(`section-${level}`)?.scrollIntoView({ behavior: 'smooth' })} />
+      <SidebarNavigation
+        selectedNeighborhood={selectedNeighborhood}
+        onSelectNeighborhood={setSelectedNeighborhood}
+        onScrollToSection={(level: number) => document.getElementById(`section-${level}`)?.scrollIntoView({ behavior: 'smooth' })}
+        selectedCategory={selectedCategory}
+        onSelectCategory={(cat: string) => { setSelectedCategory(cat) }}
+      />
 
       <main>
         <section className="relative w-full px-4 py-12 sm:px-6 lg:px-8">
@@ -53,7 +61,24 @@ export default function HomePage() {
               Descubrí las mejores masajistas verificadas en Buenos Aires.
             </p>
 
-            <div className="mt-8 mb-4 flex w-full max-w-4xl flex-col items-center gap-2 rounded-lg border border-white/10 bg-black/40 p-2 backdrop-blur-sm sm:flex-row sm:gap-4">
+            {/* Category Pills */}
+            <div className="mt-6 flex gap-2 overflow-x-auto w-full max-w-2xl pb-1" style={{ scrollbarWidth: 'none' }}>
+              {CATEGORY_OPTIONS.map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`flex-shrink-0 px-4 py-1.5 rounded-full text-xs font-medium uppercase tracking-wider transition-all border ${
+                    selectedCategory === cat
+                      ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
+                      : 'bg-transparent text-white/70 border-white/20 hover:border-[#D4AF37]/50 hover:text-white'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-3 mb-4 flex w-full max-w-4xl flex-col items-center gap-2 rounded-lg border border-white/10 bg-black/40 p-2 backdrop-blur-sm sm:flex-row sm:gap-4">
               <div className="flex flex-1 items-center border-white/10 px-4 py-2 sm:border-r w-full">
                 <MapPin className="h-4 w-4 shrink-0 text-gray-400" />
                 <input type="text" placeholder="Ubicación (ej. Palermo)" value={locationInput} onChange={(e) => setLocationInput(e.target.value)} className="ml-2 w-full border-none bg-transparent text-sm text-white outline-none" />
