@@ -1,7 +1,7 @@
 'use client'
 import { use, useState } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, DollarSign, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCheck } from 'lucide-react'
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
 import { getTherapistById, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
@@ -144,14 +144,23 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
               </div>
             )}
 
-            {/* Price */}
-            {therapist.priceRange && (
-              <div className="flex items-center gap-3 bg-black/30 rounded-lg p-3 border border-white/5">
-                <DollarSign className="h-4 w-4 text-[#D4AF37] shrink-0" />
-                <div>
-                  <span className="text-[10px] text-white/40 uppercase tracking-wider block">Precio aprox.</span>
-                  <span className="text-[#D4AF37] font-semibold text-sm">{therapist.priceRange}</span>
+            {/* Map – approximate location */}
+            {(therapist.location || therapist.neighborhood) && (
+              <div>
+                <h2 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] mb-3">Ubicación aproximada</h2>
+                <div className="rounded-xl overflow-hidden ring-1 ring-white/10">
+                  <iframe
+                    width="100%"
+                    height="200"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://maps.google.com/maps?q=${encodeURIComponent((therapist.neighborhood ?? '') + ', Buenos Aires, Argentina')}&z=14&output=embed`}
+                    title={`Ubicación en ${therapist.neighborhood}`}
+                  />
                 </div>
+                <p className="text-[10px] text-white/40 mt-1.5 text-center">Zona aproximada — no se muestra dirección exacta</p>
               </div>
             )}
 

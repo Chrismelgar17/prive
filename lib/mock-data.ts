@@ -8,7 +8,7 @@ export const MEMBERSHIP_LEVELS = {
   1: { name: 'Silver Touch', icon: 'User', color: 'text-gray-400' },
 } as const
 
-export const SERVICE_CATEGORIES = ['VIP / Premium', 'Relajante', 'Terapéutico', 'Especial', 'Nuevas'] as const
+export const SERVICE_CATEGORIES = ['VIP', 'Premium', 'Relajante', 'Terapéutico', 'Especial', 'Nuevas'] as const
 export type ServiceCategory = typeof SERVICE_CATEGORIES[number]
 
 export interface Review {
@@ -377,9 +377,9 @@ export function searchTherapists(
   }
 
   if (selectedCategory && selectedCategory !== 'Todos') {
-    const terms = selectedCategory.toLowerCase().split(' / ').map(t => t.trim())
+    const term = selectedCategory.toLowerCase()
     result = result.filter(t =>
-      t.categories?.some(c => terms.some(term => c.toLowerCase() === term)) ?? false
+      t.categories?.some(c => c.toLowerCase() === term) ?? false
     )
   }
 

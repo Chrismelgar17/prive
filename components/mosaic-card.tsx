@@ -46,6 +46,9 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
           {therapist.name}, {therapist.age}
         </p>
         <p className="truncate text-[9px] text-white/70">{therapist.neighborhood}</p>
+        {therapist.priceRange && (
+          <p className="truncate text-[9px] font-semibold text-[#D4AF37] mt-0.5">{therapist.priceRange}</p>
+        )}
       </div>
       {isDiamond && <div className="shimmer-gold pointer-events-none absolute inset-0 opacity-30" />}
     </Link>
