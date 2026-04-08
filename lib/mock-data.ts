@@ -40,6 +40,8 @@ export interface Therapist {
   reviews?: Review[]
   profileViews?: number
   whatsappClicks?: number
+  docVerified?: boolean
+  contentVerified?: boolean
 }
 
 export const mockTherapists: Therapist[] = [
