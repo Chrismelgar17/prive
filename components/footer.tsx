@@ -5,64 +5,96 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/8 bg-[#1A0A24] mt-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        {/* Top row */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-8">
-          {/* Brand */}
-          <div className="text-center sm:text-left">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-14 pb-8">
+
+        {/* Main columns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-8">
+
+          {/* Column 1 — Brand */}
+          <div className="sm:col-span-2 lg:col-span-1">
             <span className="font-serif text-xl font-light tracking-[0.25em] text-white uppercase">
               Privé Relax
             </span>
-            <p className="mt-1.5 text-xs text-white/40 max-w-xs leading-relaxed">
+            <p className="mt-3 text-xs text-white/40 leading-relaxed max-w-xs">
               Catálogo publicitario de anunciantes independientes verificadas en Buenos Aires.
-              No intermediamos en pagos ni acuerdos. Solo para mayores de 18 años.
+              No intermediamos en pagos ni acuerdos entre partes.
             </p>
+            <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-white/40 uppercase tracking-widest">
+              +18 Solo adultos
+            </span>
           </div>
 
-          {/* Legal links */}
-          <nav aria-label="Legal" className="flex flex-wrap justify-center sm:justify-end gap-x-6 gap-y-2">
-            <Link
-              href="/terminos"
-              className="text-xs text-white/50 hover:text-[#D4AF37] transition-colors"
-            >
-              Términos y Condiciones
-            </Link>
-            <Link
-              href="/privacidad"
-              className="text-xs text-white/50 hover:text-[#D4AF37] transition-colors"
-            >
-              Política de Privacidad
-            </Link>
-            <Link
-              href="/privacidad#cookies"
-              className="text-xs text-white/50 hover:text-[#D4AF37] transition-colors"
-            >
-              Cookies
-            </Link>
-            <Link
-              href="/privacidad#dmca"
-              className="text-xs text-white/50 hover:text-[#D4AF37] transition-colors"
-            >
-              DMCA
-            </Link>
-          </nav>
+          {/* Column 2 — Directorio */}
+          <div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/30 mb-4">
+              Directorio
+            </h3>
+            <nav className="flex flex-col gap-2.5">
+              <Link href="/" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Inicio</Link>
+              <Link href="/login" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Publicar anuncio</Link>
+              <Link href="/dashboard" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Mi cuenta</Link>
+            </nav>
+          </div>
+
+          {/* Column 3 — Legales */}
+          <div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/30 mb-4">
+              Legales
+            </h3>
+            <nav className="flex flex-col gap-2.5">
+              <Link href="/terminos" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">
+                Términos y Condiciones
+              </Link>
+              <Link href="/privacidad" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">
+                Política de Privacidad
+              </Link>
+              <Link href="/privacidad#cookies" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">
+                Política de Cookies
+              </Link>
+              <Link href="/privacidad#dmca" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">
+                DMCA / Derechos de imagen
+              </Link>
+              <Link href="/terminos#separacion" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">
+                Separación de Servicios
+              </Link>
+            </nav>
+          </div>
+
+          {/* Column 4 — Aviso legal */}
+          <div>
+            <h3 className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/30 mb-4">
+              Aviso Legal
+            </h3>
+            <div className="space-y-2.5 text-[11px] text-white/30 leading-relaxed">
+              <p>
+                Privé Relax es un <strong className="text-white/40">catálogo publicitario</strong>. No presta, contrata ni intermedia servicios.
+              </p>
+              <p>
+                Los anunciantes operan de forma autónoma e independiente. Todo acuerdo es exclusivo entre las partes.
+              </p>
+              <p>
+                Contenido generado por terceros. Privé Relax no verifica ni garantiza la exactitud de los anuncios publicados.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* Divider */}
-        <div className="my-7 border-t border-white/5" />
+        <div className="my-8 border-t border-white/5" />
 
-        {/* Age warning + copyright */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
-          <p className="text-[11px] text-white/30 max-w-md leading-relaxed">
-            <span className="font-semibold text-white/40">+18</span>
-            {' '}Contenido exclusivo para adultos. Al acceder confirmás tener 18 años o más.{' '}
-            <span className="text-white/40">Privé Relax es un catálogo publicitario.</span>{' '}
-            No interviene en pagos, acuerdos ni prestación de servicios. Cada anunciante es independiente y responsable de su propio contenido.
+        {/* Bottom bar */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <p className="text-[11px] text-white/25 leading-relaxed">
+            © {year} <span className="text-white/35 font-medium">Privé Relax</span>. Todos los derechos reservados.
+            {' '}Marca y contenido protegidos. Prohibida su reproducción sin autorización.
           </p>
-          <p className="text-[11px] text-white/30 shrink-0">
-            © {year} Privé Relax. Todos los derechos reservados.
-          </p>
+          <div className="flex items-center gap-4 shrink-0">
+            <Link href="/terminos" className="text-[10px] text-white/25 hover:text-white/50 transition-colors uppercase tracking-wider">T&C</Link>
+            <Link href="/privacidad" className="text-[10px] text-white/25 hover:text-white/50 transition-colors uppercase tracking-wider">Privacidad</Link>
+            <Link href="/privacidad#dmca" className="text-[10px] text-white/25 hover:text-white/50 transition-colors uppercase tracking-wider">DMCA</Link>
+          </div>
         </div>
+
       </div>
     </footer>
   )
