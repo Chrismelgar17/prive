@@ -73,10 +73,6 @@ export default function HomePage() {
             <p className="mt-4 text-sm text-gray-400 md:text-base">
               Catálogo publicitario de anunciantes independientes verificadas en Buenos Aires.
             </p>
-            <p className="mt-1.5 text-[11px] text-white/30 max-w-xl">
-              Privé Relax no interviene en acuerdos, pagos ni prestación de servicios entre anunciantes y usuarios.
-              Cada anunciante opera de forma autónoma e independiente.
-            </p>
 
             {/* Category Pills */}
             <div className="mt-6 flex gap-2 overflow-x-auto w-full max-w-2xl pb-1" style={{ scrollbarWidth: 'none' }}>
