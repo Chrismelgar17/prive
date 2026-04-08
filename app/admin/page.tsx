@@ -89,6 +89,7 @@ export default function AdminPage() {
   const [form, setForm] = useState<PF>(INIT)
   const [errors, setErrors] = useState<FE>({})
   const [galleryInput, setGalleryInput] = useState('')
+  const [galleryKey, setGalleryKey] = useState(0)
   const [serviceInput, setServiceInput] = useState('')
   const [search, setSearch] = useState('')
   // ── Auth & Settings ──
@@ -251,9 +252,10 @@ export default function AdminPage() {
 
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? [])
+    if (!files.length) return
     const b64s = await Promise.all(files.map(readFileAsBase64))
     setForm(f => ({ ...f, gallery: [...f.gallery, ...b64s] }))
-    e.target.value = ''
+    setGalleryKey(k => k + 1)
   }
 
   // ── Password gate ──
@@ -382,7 +384,7 @@ export default function AdminPage() {
                 {/* Galería */}
                 <FInput label="Galería (varias fotos)">
                   <label className="flex items-center justify-center gap-3 w-full border-2 border-dashed border-white/10 bg-white/[0.03] hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 rounded-xl px-4 py-4 cursor-pointer transition-colors">
-                    <input type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryUpload} />
+                    <input key={galleryKey} type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryUpload} />
                     <Plus className="h-4 w-4 text-white/30" />
                     <span className="text-sm text-white/50">Agregar fotos a la galería</span>
                   </label>
