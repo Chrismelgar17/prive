@@ -1,12 +1,17 @@
 'use client'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
 import {
   ArrowLeft, Eye, MessageCircle, Users, UserCheck, PauseCircle, PlayCircle,
   TrendingUp, Shield, Plus, Pencil, Trash2, FileCheck, ImageIcon, Check,
   Search, AlertTriangle, Save, X, Phone, Tag, FileText, Percent, ArrowUpRight,
+  Settings, LogOut, ExternalLink, Mail,
 } from 'lucide-react'
 import { Header } from '@/components/header'
+import {
+  getStoredProfiles, persistProfiles, getSettings, saveSettings,
+  checkAdminAuth, setAdminAuth, clearAdminAuth, AdminSettings,
+} from '@/lib/store'
 import { mockTherapists, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, MembershipLevel, Therapist } from '@/lib/mock-data'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -81,15 +86,30 @@ export default function AdminPage() {
   const [view, setView] = useState<'list' | 'form'>('list')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
-  const [pausedIds, setPausedIds] = useState<Set<string>>(new Set())
   const [form, setForm] = useState<PF>(INIT)
   const [errors, setErrors] = useState<FE>({})
   const [galleryInput, setGalleryInput] = useState('')
   const [serviceInput, setServiceInput] = useState('')
   const [search, setSearch] = useState('')
+  // ── Auth & Settings ──
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [passwordInput, setPasswordInput] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [settings, setSettings] = useState<AdminSettings>({ ownerWhatsapp: '', ownerEmail: '', adminPassword: 'prive2026' })
+  const [showSettings, setShowSettings] = useState(false)
+  const [settingsForm, setSettingsForm] = useState<AdminSettings>({ ownerWhatsapp: '', ownerEmail: '', adminPassword: 'prive2026' })
+
+  useEffect(() => {
+    setProfiles(getStoredProfiles())
+    const s = getSettings()
+    setSettings(s)
+    setSettingsForm(s)
+    setIsAuthenticated(checkAdminAuth())
+  }, [])
 
   // ── Metrics ──
-  const activeCount = profiles.length - pausedIds.size
+  const activeCount = profiles.filter(t => !t.isPaused).length
+  const pausedCount = profiles.filter(t => t.isPaused).length
   const totalViews = profiles.reduce((s, t) => s + (t.profileViews ?? 0), 0)
   const totalClicks = profiles.reduce((s, t) => s + (t.whatsappClicks ?? 0), 0)
   const globalConversion = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : '0.0'
@@ -154,20 +174,52 @@ export default function AdminPage() {
       whatsappClicks: existing?.whatsappClicks ?? 0,
       reviews: existing?.reviews ?? [],
     }
-    setProfiles(prev => editingId ? prev.map(p => p.id === editingId ? updated : p) : [updated, ...prev])
+    const newProfiles = editingId
+      ? profiles.map(p => p.id === editingId ? updated : p)
+      : [updated, ...profiles]
+    setProfiles(newProfiles)
+    persistProfiles(newProfiles)
     setView('list')
   }
 
   // ── Delete ──
   const handleDelete = () => {
     if (!deleteId) return
-    setProfiles(prev => prev.filter(p => p.id !== deleteId))
-    setPausedIds(prev => { const n = new Set(prev); n.delete(deleteId!); return n })
+    const newProfiles = profiles.filter(p => p.id !== deleteId)
+    setProfiles(newProfiles)
+    persistProfiles(newProfiles)
     setDeleteId(null)
   }
 
-  const togglePause = (id: string) =>
-    setPausedIds(prev => { const n = new Set(prev); n.has(id) ? n.delete(id) : n.add(id); return n })
+  const togglePause = (id: string) => {
+    const newProfiles = profiles.map(p => p.id === id ? { ...p, isPaused: !p.isPaused } : p)
+    setProfiles(newProfiles)
+    persistProfiles(newProfiles)
+  }
+
+  // ── Auth ──
+  const handleAuth = () => {
+    if (passwordInput === settings.adminPassword) {
+      setAdminAuth()
+      setIsAuthenticated(true)
+      setPasswordError('')
+    } else {
+      setPasswordError('Contraseña incorrecta')
+      setPasswordInput('')
+    }
+  }
+
+  const handleLogout = () => {
+    clearAdminAuth()
+    setIsAuthenticated(false)
+    setPasswordInput('')
+  }
+
+  const handleSaveSettings = () => {
+    setSettings(settingsForm)
+    saveSettings(settingsForm)
+    setShowSettings(false)
+  }
 
   const toggleArr = (field: 'categories' | 'modality', val: string) =>
     setForm(f => ({ ...f, [field]: f[field].includes(val) ? f[field].filter(v => v !== val) : [...f[field], val] }))
@@ -179,6 +231,37 @@ export default function AdminPage() {
   const addService = () => {
     const s = serviceInput.trim(); if (!s || form.services.includes(s)) return
     setForm(f => ({ ...f, services: [...f.services, s] })); setServiceInput('')
+  }
+
+  // ── Password gate ──
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-[#2A153D] flex items-center justify-center px-4">
+        <div className="bg-[#1F0F2E] border border-white/10 rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+          <h1 className="text-xl font-bold text-white flex items-center gap-2 mb-2">
+            <Shield className="h-5 w-5 text-[#D4AF37]" /> Panel Privé Relax
+          </h1>
+          <p className="text-sm text-white/40 mb-6">Ingresá la contraseña para continuar.</p>
+          <div className="flex gap-2">
+            <input
+              type="password"
+              value={passwordInput}
+              onChange={e => { setPasswordInput(e.target.value); setPasswordError('') }}
+              onKeyDown={e => e.key === 'Enter' && handleAuth()}
+              placeholder="Contraseña"
+              className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#D4AF37]/50 transition-colors"
+              autoFocus
+            />
+            <button onClick={handleAuth}
+              className="bg-[#D4AF37] hover:bg-[#C49D2F] text-black font-bold px-4 py-2.5 rounded-lg text-sm transition-colors">
+              Entrar
+            </button>
+          </div>
+          {passwordError && <p className="mt-2 text-xs text-red-400">{passwordError}</p>}
+          <p className="mt-4 text-[10px] text-white/20 text-center">Acceso restringido · Solo administradores</p>
+        </div>
+      </div>
+    )
   }
 
   // ════════════════════════════════════════════════════════════════════
@@ -389,10 +472,20 @@ export default function AdminPage() {
             {/* ── Contacto ── */}
             <div className="bg-[#1F0F2E] rounded-xl border border-white/5 p-6">
               <SectionHead icon={Phone} label="Contacto" />
-              <FInput label="WhatsApp *" error={errors.whatsapp}>
+              <FInput label="WhatsApp * (formato internacional)" error={errors.whatsapp}>
                 <input className={inputCls(errors.whatsapp)} value={form.whatsapp}
                   onChange={e => setForm(f => ({ ...f, whatsapp: e.target.value }))} placeholder="+5491123456789" />
               </FInput>
+              {form.whatsapp && !errors.whatsapp && (
+                <a
+                  href={`https://wa.me/${form.whatsapp.replace(/[^0-9]/g, '')}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 mt-2 text-xs text-[#25D366] hover:underline"
+                >
+                  <ExternalLink className="h-3 w-3" /> Probar enlace de WhatsApp
+                </a>
+              )}
+              <p className="mt-2 text-[10px] text-white/30">Ejemplo correcto: +5491112345678 (código país + código área sin 0 + número)</p>
             </div>
 
             {/* Bottom save buttons */}
@@ -428,18 +521,96 @@ export default function AdminPage() {
               <Shield className="h-6 w-6 text-[#D4AF37]" /> Panel de Administración
             </h1>
           </div>
-          <button onClick={openNew}
-            className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] text-black font-semibold px-4 py-2.5 rounded-lg text-sm transition-colors">
-            <Plus className="h-4 w-4" /> Nuevo Perfil
-          </button>
+          <div className="flex gap-2">
+            <button onClick={() => { setShowSettings(s => !s); setSettingsForm(settings) }}
+              className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 px-3 py-2.5 rounded-lg text-sm transition-colors">
+              <Settings className="h-4 w-4" />
+            </button>
+            <button onClick={handleLogout}
+              className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 px-3 py-2.5 rounded-lg text-sm transition-colors" title="Cerrar sesión">
+              <LogOut className="h-4 w-4" />
+            </button>
+            <button onClick={openNew}
+              className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] text-black font-semibold px-4 py-2.5 rounded-lg text-sm transition-colors">
+              <Plus className="h-4 w-4" /> Nuevo Perfil
+            </button>
+          </div>
         </div>
+
+        {/* ── Settings Panel ── */}
+        {showSettings && (
+          <div className="mb-6 bg-[#1F0F2E] rounded-xl border border-[#D4AF37]/20 p-6">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] mb-4 flex items-center gap-2">
+              <Settings className="h-3.5 w-3.5" /> Configuración del Panel
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <label className="block text-xs font-medium text-white/60 mb-1.5">Tu WhatsApp (contacto del sitio)</label>
+                <input
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#D4AF37]/50"
+                  value={settingsForm.ownerWhatsapp}
+                  onChange={e => setSettingsForm(f => ({ ...f, ownerWhatsapp: e.target.value }))}
+                  placeholder="+5491112345678"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-white/60 mb-1.5">Tu Email</label>
+                <input
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#D4AF37]/50"
+                  value={settingsForm.ownerEmail}
+                  onChange={e => setSettingsForm(f => ({ ...f, ownerEmail: e.target.value }))}
+                  placeholder="admin@example.com"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-white/60 mb-1.5">Contraseña del panel</label>
+                <input
+                  type="password"
+                  className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-sm text-white placeholder-white/30 outline-none focus:border-[#D4AF37]/50"
+                  value={settingsForm.adminPassword}
+                  onChange={e => setSettingsForm(f => ({ ...f, adminPassword: e.target.value }))}
+                  placeholder="Nueva contraseña"
+                />
+              </div>
+            </div>
+            <div className="flex gap-3">
+              <button onClick={handleSaveSettings}
+                className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] text-black font-semibold px-4 py-2 rounded-lg text-sm transition-colors">
+                <Save className="h-4 w-4" /> Guardar configuración
+              </button>
+              <button onClick={() => setShowSettings(false)}
+                className="px-4 py-2 rounded-lg border border-white/10 text-white/60 text-sm hover:bg-white/5 transition-colors">
+                Cancelar
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* ── Owner contact shortcuts ── */}
+        {(settings.ownerWhatsapp || settings.ownerEmail) && (
+          <div className="mb-6 flex flex-wrap items-center gap-4 bg-white/3 border border-white/5 rounded-xl px-4 py-3">
+            <span className="text-[10px] uppercase tracking-widest text-white/30">Mis contactos</span>
+            {settings.ownerWhatsapp && (
+              <a href={`https://wa.me/${settings.ownerWhatsapp.replace(/[^0-9]/g, '')}`} target="_blank" rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs text-[#25D366] hover:underline">
+                <Phone className="h-3.5 w-3.5" /> {settings.ownerWhatsapp}
+              </a>
+            )}
+            {settings.ownerEmail && (
+              <a href={`mailto:${settings.ownerEmail}`}
+                className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:underline">
+                <Mail className="h-3.5 w-3.5" /> {settings.ownerEmail}
+              </a>
+            )}
+          </div>
+        )}
 
         {/* Metrics */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
           {[
             { icon: Users,       label: 'Perfiles',   value: profiles.length,                             color: 'text-white',       bg: 'bg-white/5'           },
             { icon: UserCheck,   label: 'Activos',    value: activeCount,                                 color: 'text-emerald-400', bg: 'bg-emerald-500/10'    },
-            { icon: PauseCircle, label: 'Pausados',   value: pausedIds.size,                              color: 'text-amber-400',   bg: 'bg-amber-500/10'      },
+            { icon: PauseCircle, label: 'Pausados',   value: pausedCount,                              color: 'text-amber-400',   bg: 'bg-amber-500/10'      },
             { icon: Eye,         label: 'Visitas',    value: totalViews.toLocaleString('es-AR'),          color: 'text-blue-400',    bg: 'bg-blue-500/10'       },
             { icon: MessageCircle, label: 'Clicks WA', value: totalClicks.toLocaleString('es-AR'),        color: 'text-[#25D366]',   bg: 'bg-emerald-500/10'    },
             { icon: Percent,     label: 'Conv. Rate', value: `${globalConversion}%`,                      color: 'text-[#D4AF37]',   bg: 'bg-yellow-500/10'     },
@@ -515,7 +686,7 @@ export default function AdminPage() {
               </thead>
               <tbody>
                 {filtered.map(t => {
-                  const isPaused = pausedIds.has(t.id)
+                  const isPaused = t.isPaused ?? false
                   const docV = t.docVerified ?? false
                   const contentV = t.contentVerified ?? false
                   const conv = t.profileViews ? ((t.whatsappClicks ?? 0) / t.profileViews * 100).toFixed(1) : null

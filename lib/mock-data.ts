@@ -42,6 +42,7 @@ export interface Therapist {
   whatsappClicks?: number
   docVerified?: boolean
   contentVerified?: boolean
+  isPaused?: boolean
 }
 
 export const mockTherapists: Therapist[] = [
