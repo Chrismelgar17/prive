@@ -50,13 +50,51 @@ export default function TerminosPage() {
 
           <Section title="3. Naturaleza del Servicio">
             <p>
-              Privé Relax es un <strong>directorio de anuncios clasificados</strong>. El Sitio no presta, controla,
-              supervisa ni garantiza los servicios ofrecidos por los anunciantes, ni actúa como intermediario,
-              empleador, agencia o representante de ninguna de las partes.
+              Privé Relax es un <strong>catálogo publicitario en línea</strong>. Su única función es exhibir anuncios
+              de personas que ofrecen servicios de forma autónoma e independiente. El Sitio <strong>no presta,
+              contrata, organiza, controla ni garantiza</strong> los servicios anunciados.
             </p>
             <p>
-              Los acuerdos, transacciones o interacciones entre anunciantes y usuarios son exclusivamente entre dichas
-              partes. Privé Relax no asume responsabilidad alguna por el resultado de esos intercambios.
+              Privé Relax <strong>no actúa como intermediario</strong> en ninguna transacción económica, acuerdo
+              comercial, cobro o pago entre anunciantes y usuarios. No procesa ni almacena información de pagos.
+              Toda transacción o intercambio que pudiera surgir es <strong>exclusivo entre las partes
+              involucradas</strong>, sin participación de este Sitio.
+            </p>
+            <p>
+              Privé Relax no es empleador, agente, representante legal ni socio comercial de ningún anunciante.
+              Cada anunciante opera de forma completamente autónoma y es el único responsable del contenido
+              publicado y de los servicios que, por su cuenta, decida ofrecer.
+            </p>
+            <p>
+              Los servicios exhibidos en los perfiles son declarados unilateralmente por cada anunciante.
+              Privé Relax no verifica, avala ni garantiza la exactitud, legalidad ni disponibilidad de
+              dichos servicios.
+            </p>
+          </Section>
+
+          <Section title="3b. Separación de Servicios y Transparencia">
+            <p>
+              Para evitar cualquier confusión, se establece expresamente la siguiente distinción:
+            </p>
+            <ul>
+              <li>
+                <strong>Privé Relax</strong> presta únicamente un <em>servicio de publicación de anuncios</em>.
+                Su contraprestación, si la hubiere, se limita al espacio publicitario.
+              </li>
+              <li>
+                <strong>Los anunciantes</strong> son personas físicas independientes que ofrecen sus propios servicios
+                por cuenta propia, bajo su exclusiva responsabilidad y en cumplimiento de la normativa que les resulte
+                aplicable.
+              </li>
+              <li>
+                <strong>Los usuarios</strong> que contactan a los anunciantes lo hacen directamente, sin ningún tipo
+                de intermediación, comisión ni participación por parte de Privé Relax.
+              </li>
+            </ul>
+            <p>
+              Privé Relax no recibe, gestiona ni media pagos de ningún tipo relacionados con los servicios anunciados.
+              Los precios, condiciones y acuerdos económicos que pudieran establecerse son acordados directamente y
+              de manera exclusiva entre anunciante y usuario.
             </p>
           </Section>
 

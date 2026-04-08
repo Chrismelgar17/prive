@@ -62,7 +62,11 @@ export default function HomePage() {
               Directorio Premium de <span className="text-white">Masajistas</span>
             </h1>
             <p className="mt-4 text-sm text-gray-400 md:text-base">
-              Descubrí las mejores masajistas verificadas en Buenos Aires.
+              Catálogo publicitario de anunciantes independientes verificadas en Buenos Aires.
+            </p>
+            <p className="mt-1.5 text-[11px] text-white/30 max-w-xl">
+              Privé Relax no interviene en acuerdos, pagos ni prestación de servicios entre anunciantes y usuarios.
+              Cada anunciante opera de forma autónoma e independiente.
             </p>
 
             {/* Category Pills */}

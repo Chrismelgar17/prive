@@ -14,8 +14,8 @@ export function Footer() {
               Privé Relax
             </span>
             <p className="mt-1.5 text-xs text-white/40 max-w-xs leading-relaxed">
-              Directorio premium de acompañantes verificadas en Buenos Aires.
-              Mayores de 18 años.
+              Catálogo publicitario de anunciantes independientes verificadas en Buenos Aires.
+              No intermediamos en pagos ni acuerdos. Solo para mayores de 18 años.
             </p>
           </div>
 
@@ -55,8 +55,9 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
           <p className="text-[11px] text-white/30 max-w-md leading-relaxed">
             <span className="font-semibold text-white/40">+18</span>
-            {' '}Este sitio contiene contenido solo para adultos. Al acceder declarás tener 18 años o más.
-            Privé Relax es un directorio de anuncios. No interviene en acuerdos entre anunciantes y usuarios.
+            {' '}Contenido exclusivo para adultos. Al acceder confirmás tener 18 años o más.{' '}
+            <span className="text-white/40">Privé Relax es un catálogo publicitario.</span>{' '}
+            No interviene en pagos, acuerdos ni prestación de servicios. Cada anunciante es independiente y responsable de su propio contenido.
           </p>
           <p className="text-[11px] text-white/30 shrink-0">
             © {year} Privé Relax. Todos los derechos reservados.
