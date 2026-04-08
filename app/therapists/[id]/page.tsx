@@ -1,16 +1,27 @@
 'use client'
-import { use, useState } from 'react'
+import { use, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCheck, Eye, Phone } from 'lucide-react'
+import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCheck } from 'lucide-react'
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
-import { getTherapistById, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
+import { MEMBERSHIP_LEVELS, Therapist } from '@/lib/mock-data'
+import { getStoredProfiles } from '@/lib/store'
 
 export default function TherapistProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
-  const therapist = getTherapistById(id)
+  const [therapist, setTherapist] = useState<Therapist | undefined>(undefined)
   const [activePhoto, setActivePhoto] = useState(0)
 
+  useEffect(() => {
+    const stored = getStoredProfiles()
+    setTherapist(stored.find(t => t.id === id))
+  }, [id])
+
+  if (therapist === undefined) return (
+    <div className="min-h-screen bg-[#2A153D] flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" />
+    </div>
+  )
   if (!therapist) return <div className="text-white text-center py-20">Perfil no encontrado</div>
 
   const levelInfo = MEMBERSHIP_LEVELS[therapist.level]
@@ -164,25 +175,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
               </div>
             )}
 
-            {/* Stats bar */}
-            {(therapist.profileViews || therapist.whatsappClicks) ? (
-              <div className="grid grid-cols-2 gap-3">
-                <div className="bg-black/30 border border-white/5 rounded-xl p-3 text-center">
-                  <div className="flex items-center justify-center gap-1.5 mb-1">
-                    <Eye className="h-3.5 w-3.5 text-blue-400" />
-                    <span className="text-xs text-white/40 uppercase tracking-wider">Visitas</span>
-                  </div>
-                  <p className="text-xl font-bold text-blue-400">{therapist.profileViews?.toLocaleString('es-AR') ?? '—'}</p>
-                </div>
-                <div className="bg-black/30 border border-white/5 rounded-xl p-3 text-center">
-                  <div className="flex items-center justify-center gap-1.5 mb-1">
-                    <Phone className="h-3.5 w-3.5 text-[#25D366]" />
-                    <span className="text-xs text-white/40 uppercase tracking-wider">Contactos</span>
-                  </div>
-                  <p className="text-xl font-bold text-[#25D366]">{therapist.whatsappClicks?.toLocaleString('es-AR') ?? '—'}</p>
-                </div>
-              </div>
-            ) : null}
+            {/* Stats bar — visible to admin/owner only, hidden from public */}
 
             {/* WhatsApp Button (desktop) */}
             <div className="hidden lg:block mt-auto space-y-3">
@@ -254,10 +247,6 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
                 </p>
               )}
             </div>
-          </div>
-          <div className="text-right text-[10px] text-white/70 leading-tight shrink-0">
-            <p className="font-bold text-white text-xs">{therapist.whatsappClicks ?? 0}</p>
-            <p>contactos</p>
           </div>
         </a>
       </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Diamond, Star, Zap, ShieldCheck, User, Eye, Phone } from 'lucide-react'
+import { Diamond, Star, Zap, ShieldCheck, User } from 'lucide-react'
 import { Therapist, MembershipLevel } from '@/lib/mock-data'
 
 const levelIcons: Record<MembershipLevel, React.ElementType> = {
@@ -54,21 +54,6 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
         {therapist.priceRange && (
           <p className="truncate text-[9px] font-semibold text-[#D4AF37] mt-0.5">{therapist.priceRange}</p>
         )}
-        {/* Micro metrics */}
-        {(therapist.profileViews || therapist.whatsappClicks) ? (
-          <div className="flex items-center gap-2 mt-1.5 pt-1.5 border-t border-white/10">
-            {therapist.profileViews ? (
-              <span className="flex items-center gap-0.5 text-[9px] text-blue-300/80">
-                <Eye className="h-2.5 w-2.5" />{therapist.profileViews >= 1000 ? `${(therapist.profileViews / 1000).toFixed(1)}k` : therapist.profileViews}
-              </span>
-            ) : null}
-            {therapist.whatsappClicks ? (
-              <span className="flex items-center gap-0.5 text-[9px] text-[#25D366]/80">
-                <Phone className="h-2.5 w-2.5" />{therapist.whatsappClicks}
-              </span>
-            ) : null}
-          </div>
-        ) : null}
       </div>
       {isDiamond && <div className="shimmer-gold pointer-events-none absolute inset-0 opacity-30" />}
     </Link>

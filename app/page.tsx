@@ -4,7 +4,8 @@ import { MapPin, SlidersHorizontal, Check } from 'lucide-react'
 import { Header } from '@/components/header'
 import { MosaicCard } from '@/components/mosaic-card'
 import { SidebarNavigation } from '@/components/sidebar-navigation'
-import { filterByNeighborhood, searchTherapists, MembershipLevel, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES } from '@/lib/mock-data'
+import { searchTherapists, MembershipLevel, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, mockTherapists, Therapist } from '@/lib/mock-data'
+import { getStoredProfiles } from '@/lib/store'
 
 const levelOrder: MembershipLevel[] = [5, 4, 3, 2, 1]
 const FILTER_OPTIONS = [ { id: 'hotel', label: 'CITA HOTEL' }, { id: 'depto', label: 'CITA DEPTO' }, { id: 'domicilio', label: 'CITA DOMICILIO' } ]
@@ -17,7 +18,12 @@ export default function HomePage() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState('Todos')
+  const [allProfiles, setAllProfiles] = useState<Therapist[]>([...mockTherapists])
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    setAllProfiles(getStoredProfiles())
+  }, [])
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -32,10 +38,13 @@ export default function HomePage() {
   }
 
   const filteredTherapists = useMemo(() => {
-    const byNeighborhood = filterByNeighborhood(selectedNeighborhood)
+    const active = allProfiles.filter(t => !t.isPaused)
+    const byNeighborhood = selectedNeighborhood === 'Todos'
+      ? active
+      : active.filter(t => t.neighborhood === selectedNeighborhood)
     const byFilters = searchTherapists(byNeighborhood, locationInput, selectedFilters, selectedCategory)
     return selectedLevel === 0 ? byFilters : byFilters.filter(t => t.level === selectedLevel)
-  }, [selectedNeighborhood, locationInput, selectedFilters, selectedCategory, selectedLevel])
+  }, [allProfiles, selectedNeighborhood, locationInput, selectedFilters, selectedCategory, selectedLevel])
 
   const groupedByLevel = levelOrder.reduce((acc, level) => {
     acc[level] = filteredTherapists.filter((t) => t.level === level)
