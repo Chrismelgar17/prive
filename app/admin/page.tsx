@@ -233,6 +233,29 @@ export default function AdminPage() {
     setForm(f => ({ ...f, services: [...f.services, s] })); setServiceInput('')
   }
 
+  // ── File → base64 ──
+  const readFileAsBase64 = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result as string)
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+
+  const handleMainPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]; if (!file) return
+    const b64 = await readFileAsBase64(file)
+    setForm(f => ({ ...f, photo_url: b64 }))
+    e.target.value = ''
+  }
+
+  const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? [])
+    const b64s = await Promise.all(files.map(readFileAsBase64))
+    setForm(f => ({ ...f, gallery: [...f.gallery, ...b64s] }))
+    e.target.value = ''
+  }
+
   // ── Password gate ──
   if (!isAuthenticated) {
     return (
@@ -320,33 +343,57 @@ export default function AdminPage() {
             {/* ── Foto y galería ── */}
             <div className="bg-[#1F0F2E] rounded-xl border border-white/5 p-6">
               <SectionHead icon={ImageIcon} label="Foto y galería" />
-              <div className="space-y-4">
-                <FInput label="URL foto principal *" error={errors.photo_url}>
-                  <input className={inputCls(errors.photo_url)} value={form.photo_url}
+              <div className="space-y-5">
+
+                {/* Foto principal */}
+                <FInput label="Foto principal *" error={errors.photo_url}>
+                  <label className={`flex items-center justify-center gap-3 w-full border-2 border-dashed rounded-xl px-4 py-5 cursor-pointer transition-colors ${
+                    errors.photo_url ? 'border-red-500/40 bg-red-500/5' : 'border-white/10 bg-white/[0.03] hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5'
+                  }`}>
+                    <input type="file" accept="image/*" className="hidden" onChange={handleMainPhotoUpload} />
+                    <ImageIcon className="h-5 w-5 text-white/30" />
+                    <div className="text-center">
+                      <p className="text-sm text-white/60">Tocá para subir foto</p>
+                      <p className="text-[11px] text-white/30 mt-0.5">JPG, PNG, WEBP · Máx. 10 MB</p>
+                    </div>
+                  </label>
+                  {/* URL fallback */}
+                  <div className="mt-2 flex items-center gap-2">
+                    <div className="flex-1 h-px bg-white/5" />
+                    <span className="text-[10px] text-white/25 uppercase tracking-wider">o pegá una URL</span>
+                    <div className="flex-1 h-px bg-white/5" />
+                  </div>
+                  <input className={`mt-2 ${inputCls(errors.photo_url)}`} value={form.photo_url.startsWith('data:') ? '' : form.photo_url}
                     onChange={e => setForm(f => ({ ...f, photo_url: e.target.value }))} placeholder="https://..." />
                 </FInput>
+
+                {/* Preview foto principal */}
                 {form.photo_url && (
-                  <div className="w-20 h-24 rounded-lg overflow-hidden ring-1 ring-white/10">
+                  <div className="relative group w-24 h-28 rounded-xl overflow-hidden ring-2 ring-[#D4AF37]/30">
                     <img src={form.photo_url} alt="preview" className="w-full h-full object-cover" />
-                  </div>
-                )}
-                <FInput label="Agregar fotos a la galería">
-                  <div className="flex gap-2">
-                    <input className={inputCls()} value={galleryInput}
-                      onChange={e => setGalleryInput(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addGallery())}
-                      placeholder="https://..." />
-                    <button onClick={addGallery} className="shrink-0 px-3 bg-white/5 border border-white/10 rounded-lg text-white/70 hover:text-[#D4AF37] hover:border-[#D4AF37]/30 transition-colors">
-                      <Plus className="h-4 w-4" />
+                    <button type="button"
+                      onClick={() => setForm(f => ({ ...f, photo_url: '' }))}
+                      className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <X className="h-5 w-5 text-white" />
                     </button>
                   </div>
+                )}
+
+                {/* Galería */}
+                <FInput label="Galería (varias fotos)">
+                  <label className="flex items-center justify-center gap-3 w-full border-2 border-dashed border-white/10 bg-white/[0.03] hover:border-[#D4AF37]/40 hover:bg-[#D4AF37]/5 rounded-xl px-4 py-4 cursor-pointer transition-colors">
+                    <input type="file" accept="image/*" multiple className="hidden" onChange={handleGalleryUpload} />
+                    <Plus className="h-4 w-4 text-white/30" />
+                    <span className="text-sm text-white/50">Agregar fotos a la galería</span>
+                  </label>
                 </FInput>
+
                 {form.gallery.length > 0 && (
                   <div className="flex flex-wrap gap-2">
                     {form.gallery.map((url, i) => (
                       <div key={i} className="relative group w-16 h-20 rounded-lg overflow-hidden ring-1 ring-white/10">
                         <img src={url} alt="" className="w-full h-full object-cover" />
-                        <button onClick={() => setForm(f => ({ ...f, gallery: f.gallery.filter((_, idx) => idx !== i) }))}
+                        <button type="button" onClick={() => setForm(f => ({ ...f, gallery: f.gallery.filter((_, idx) => idx !== i) }))}
                           className="absolute inset-0 bg-black/60 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                           <X className="h-4 w-4 text-white" />
                         </button>

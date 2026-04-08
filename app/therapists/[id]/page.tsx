@@ -25,7 +25,8 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   if (!therapist) return <div className="text-white text-center py-20">Perfil no encontrado</div>
 
   const levelInfo = MEMBERSHIP_LEVELS[therapist.level]
-  const whatsappUrl = `https://wa.me/${therapist.whatsapp?.replace(/[^0-9]/g, '')}`
+  const waMessage = encodeURIComponent(`Hola ${therapist.name}, vi tu aviso en Privé Relax`)
+  const whatsappUrl = `https://wa.me/${therapist.whatsapp?.replace(/[^0-9]/g, '')}?text=${waMessage}`
   const allPhotos = (therapist.gallery && therapist.gallery.length > 0) ? therapist.gallery : [therapist.photo_url]
 
   const averageRating = therapist.reviews && therapist.reviews.length > 0
