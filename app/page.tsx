@@ -12,6 +12,7 @@ const CATEGORY_OPTIONS = ['Todos', ...SERVICE_CATEGORIES]
 
 export default function HomePage() {
   const [selectedNeighborhood, setSelectedNeighborhood] = useState('Todos')
+  const [selectedLevel, setSelectedLevel] = useState(0)
   const [locationInput, setLocationInput] = useState('')
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
@@ -32,8 +33,9 @@ export default function HomePage() {
 
   const filteredTherapists = useMemo(() => {
     const byNeighborhood = filterByNeighborhood(selectedNeighborhood)
-    return searchTherapists(byNeighborhood, locationInput, selectedFilters, selectedCategory)
-  }, [selectedNeighborhood, locationInput, selectedFilters, selectedCategory])
+    const byFilters = searchTherapists(byNeighborhood, locationInput, selectedFilters, selectedCategory)
+    return selectedLevel === 0 ? byFilters : byFilters.filter(t => t.level === selectedLevel)
+  }, [selectedNeighborhood, locationInput, selectedFilters, selectedCategory, selectedLevel])
 
   const groupedByLevel = levelOrder.reduce((acc, level) => {
     acc[level] = filteredTherapists.filter((t) => t.level === level)
@@ -49,6 +51,8 @@ export default function HomePage() {
         onScrollToSection={(level: number) => document.getElementById(`section-${level}`)?.scrollIntoView({ behavior: 'smooth' })}
         selectedCategory={selectedCategory}
         onSelectCategory={(cat: string) => { setSelectedCategory(cat) }}
+        selectedLevel={selectedLevel}
+        onSelectLevel={setSelectedLevel}
       />
 
       <main>

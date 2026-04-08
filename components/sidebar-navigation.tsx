@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { Menu, X, Search, Sparkles } from 'lucide-react'
-import { SERVICE_CATEGORIES } from '@/lib/mock-data'
+import { Menu, X, Search, Sparkles, Gem } from 'lucide-react'
+import { SERVICE_CATEGORIES, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
 
 // Complete list of all 48 CABA neighborhoods sorted A-Z
 export const CABA_NEIGHBORHOODS = [
@@ -17,15 +17,25 @@ export const CABA_NEIGHBORHOODS = [
   'Villa Soldati', 'Villa Urquiza'
 ]
 
+const LEVEL_COLORS: Record<number, { dot: string; active: string }> = {
+  5: { dot: 'bg-[#D4AF37]',  active: 'bg-[#D4AF37]/20 text-[#D4AF37]' },
+  4: { dot: 'bg-rose-400',   active: 'bg-rose-400/20 text-rose-400' },
+  3: { dot: 'bg-blue-400',   active: 'bg-blue-400/20 text-blue-400' },
+  2: { dot: 'bg-yellow-400', active: 'bg-yellow-400/20 text-yellow-400' },
+  1: { dot: 'bg-zinc-400',   active: 'bg-zinc-400/20 text-zinc-300' },
+}
+
 interface SidebarProps {
   selectedNeighborhood: string
   onSelectNeighborhood: (n: string) => void
   onScrollToSection: (level: number) => void
   selectedCategory?: string
   onSelectCategory?: (cat: string) => void
+  selectedLevel?: number
+  onSelectLevel?: (level: number) => void
 }
 
-export function SidebarNavigation({ selectedNeighborhood, onSelectNeighborhood, onScrollToSection, selectedCategory = 'Todos', onSelectCategory }: SidebarProps) {
+export function SidebarNavigation({ selectedNeighborhood, onSelectNeighborhood, onScrollToSection, selectedCategory = 'Todos', onSelectCategory, selectedLevel = 0, onSelectLevel }: SidebarProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [search, setSearch] = useState('')
   const filtered = CABA_NEIGHBORHOODS.filter(n => n.toLowerCase().includes(search.toLowerCase()))
@@ -50,6 +60,39 @@ export function SidebarNavigation({ selectedNeighborhood, onSelectNeighborhood, 
         </div>
 
         <div className="p-6 overflow-y-auto h-[calc(100vh-64px)]">
+
+          {/* ── Niveles ── */}
+          <div className="mb-6">
+            <p className="text-xs font-semibold text-white/50 uppercase tracking-widest mb-3 flex items-center gap-1.5">
+              <Gem className="h-3.5 w-3.5" /> Niveles
+            </p>
+            <div className="grid gap-1">
+              <button
+                onClick={() => { onSelectLevel?.(0); setIsOpen(false) }}
+                className={`text-left px-3 py-2.5 rounded-md text-sm transition-colors ${
+                  selectedLevel === 0 ? 'bg-[#D4AF37]/20 text-[#D4AF37] font-medium' : 'text-white/80 hover:bg-[#3D1F54] hover:text-white'
+                }`}
+              >
+                Todos los niveles
+              </button>
+              {([5, 4, 3, 2, 1] as const).map(lvl => (
+                <button
+                  key={lvl}
+                  onClick={() => { onSelectLevel?.(lvl); setIsOpen(false) }}
+                  className={`text-left px-3 py-2.5 rounded-md text-sm transition-colors flex items-center gap-2.5 ${
+                    selectedLevel === lvl
+                      ? `${LEVEL_COLORS[lvl].active} font-medium`
+                      : 'text-white/80 hover:bg-[#3D1F54] hover:text-white'
+                  }`}
+                >
+                  <span className={`h-2 w-2 rounded-full flex-shrink-0 ${LEVEL_COLORS[lvl].dot}`} />
+                  {MEMBERSHIP_LEVELS[lvl].name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="border-t border-white/10 pt-6" />
 
           {/* ── Categorías ── */}
           <div className="mb-6">
