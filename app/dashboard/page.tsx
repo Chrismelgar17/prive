@@ -1,6 +1,6 @@
 'use client'
 import Link from 'next/link'
-import { ArrowLeft, Eye, MessageCircle, Trophy, TrendingUp, Globe, User } from 'lucide-react'
+import { ArrowLeft, Eye, MessageCircle, Trophy, TrendingUp, Globe, User, ArrowUpRight, Percent } from 'lucide-react'
 import { Header } from '@/components/header'
 import { mockTherapists, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
 
@@ -8,26 +8,34 @@ import { mockTherapists, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
 const therapist = mockTherapists[0]
 
 const mockActivity = [
-  { day: 'Hoy', visits: 24, clicks: 3 },
+  { day: 'Hoy',  visits: 24, clicks: 3 },
   { day: 'Ayer', visits: 18, clicks: 2 },
-  { day: 'Lun', visits: 31, clicks: 5 },
-  { day: 'Dom', visits: 42, clicks: 7 },
-  { day: 'Sáb', visits: 58, clicks: 9 },
-  { day: 'Vie', visits: 47, clicks: 6 },
-  { day: 'Jue', visits: 35, clicks: 4 },
+  { day: 'Lun',  visits: 31, clicks: 5 },
+  { day: 'Dom',  visits: 42, clicks: 7 },
+  { day: 'Sáb',  visits: 58, clicks: 9 },
+  { day: 'Vie',  visits: 47, clicks: 6 },
+  { day: 'Jue',  visits: 35, clicks: 4 },
 ]
 
 const mockCountries = [
   { country: 'Argentina', flag: '🇦🇷', pct: 78 },
-  { country: 'Uruguay', flag: '🇺🇾', pct: 9 },
-  { country: 'Chile', flag: '🇨🇱', pct: 7 },
-  { country: 'España', flag: '🇪🇸', pct: 4 },
-  { country: 'Otros', flag: '🌍', pct: 2 },
+  { country: 'Uruguay',   flag: '🇺🇾', pct: 9  },
+  { country: 'Chile',     flag: '🇨🇱', pct: 7  },
+  { country: 'España',    flag: '🇪🇸', pct: 4  },
+  { country: 'Otros',     flag: '🌍', pct: 2  },
 ]
 
-const sorted = [...mockTherapists].sort((a, b) => (b.profileViews ?? 0) - (a.profileViews ?? 0))
+const sorted  = [...mockTherapists].sort((a, b) => (b.profileViews ?? 0) - (a.profileViews ?? 0))
 const ranking = sorted.findIndex(t => t.id === therapist.id) + 1
 const levelInfo = MEMBERSHIP_LEVELS[therapist.level]
+
+const conversionRate = therapist.profileViews
+  ? ((therapist.whatsappClicks ?? 0) / therapist.profileViews * 100).toFixed(1)
+  : '0.0'
+
+const weekVisits  = mockActivity.reduce((s, r) => s + r.visits, 0)
+const weekClicks  = mockActivity.reduce((s, r) => s + r.clicks, 0)
+const maxVisits   = Math.max(...mockActivity.map(r => r.visits))
 
 export default function DashboardPage() {
   return (
@@ -57,40 +65,59 @@ export default function DashboardPage() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
             {
               icon: Eye,
-              label: 'Visitas al perfil',
+              label: 'Visitas totales',
               value: therapist.profileViews?.toLocaleString('es-AR') ?? '0',
-              sub: '↑ 12% esta semana',
+              sub: `+${weekVisits} esta semana`,
               color: 'text-blue-400',
-              bg: 'bg-blue-500/10',
+              bg: 'bg-blue-500/10 border-blue-500/10',
+              trend: '+12%',
             },
             {
               icon: MessageCircle,
               label: 'Clicks WhatsApp',
               value: therapist.whatsappClicks?.toLocaleString('es-AR') ?? '0',
-              sub: '↑ 8% esta semana',
+              sub: `+${weekClicks} esta semana`,
               color: 'text-[#25D366]',
-              bg: 'bg-emerald-500/10',
+              bg: 'bg-emerald-500/10 border-emerald-500/10',
+              trend: '+8%',
+            },
+            {
+              icon: Percent,
+              label: 'Conversión',
+              value: `${conversionRate}%`,
+              sub: 'visitas → contacto',
+              color: 'text-[#D4AF37]',
+              bg: 'bg-yellow-500/10 border-yellow-500/10',
+              trend: null,
             },
             {
               icon: Trophy,
               label: 'Posición ranking',
               value: `#${ranking}`,
               sub: `de ${mockTherapists.length} perfiles`,
-              color: 'text-[#D4AF37]',
-              bg: 'bg-yellow-500/10',
+              color: 'text-purple-400',
+              bg: 'bg-purple-500/10 border-purple-500/10',
+              trend: null,
             },
-          ].map(({ icon: Icon, label, value, sub, color, bg }) => (
-            <div key={label} className={`${bg} border border-white/5 rounded-xl p-5`}>
+          ].map(({ icon: Icon, label, value, sub, color, bg, trend }) => (
+            <div key={label} className={`${bg} border rounded-xl p-4 flex flex-col justify-between`}>
               <div className="flex items-center justify-between mb-3">
-                <p className="text-xs text-white/50 uppercase tracking-wider">{label}</p>
-                <Icon className={`h-4 w-4 ${color}`} />
+                <p className="text-xs text-white/50 uppercase tracking-wider leading-tight">{label}</p>
+                <Icon className={`h-4 w-4 shrink-0 ${color}`} />
               </div>
-              <p className={`text-3xl font-bold ${color}`}>{value}</p>
-              <p className="text-[11px] text-white/30 mt-1">{sub}</p>
+              <p className={`text-2xl font-bold ${color}`}>{value}</p>
+              <div className="flex items-center justify-between mt-1">
+                <p className="text-[11px] text-white/30">{sub}</p>
+                {trend && (
+                  <span className="flex items-center gap-0.5 text-[10px] text-emerald-400 font-semibold">
+                    <ArrowUpRight className="h-3 w-3" />{trend}
+                  </span>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -102,24 +129,33 @@ export default function DashboardPage() {
               <TrendingUp className="h-4 w-4" /> Actividad reciente (7 días)
             </h2>
             <div className="space-y-3">
-              {mockActivity.map(row => (
-                <div key={row.day} className="flex items-center gap-3 text-sm">
-                  <span className="w-8 text-white/40 text-xs shrink-0">{row.day}</span>
-                  <div className="flex-1 h-2 bg-white/5 rounded-full overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-[#D4AF37]/70"
-                      style={{ width: `${(row.visits / 60) * 100}%` }}
-                    />
+              {mockActivity.map(row => {
+                const visitPct = Math.round((row.visits / maxVisits) * 100)
+                const clickPct = Math.round((row.clicks / maxVisits) * 100)
+                return (
+                  <div key={row.day} className="flex items-center gap-3 text-sm">
+                    <span className="w-8 text-white/40 text-xs shrink-0">{row.day}</span>
+                    <div className="flex-1 relative h-5 flex flex-col gap-0.5 justify-center">
+                      <div className="h-2 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full bg-blue-400/60 transition-all" style={{ width: `${visitPct}%` }} />
+                      </div>
+                      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                        <div className="h-full rounded-full bg-[#25D366]/70 transition-all" style={{ width: `${clickPct}%` }} />
+                      </div>
+                    </div>
+                    <span className="text-blue-300 text-xs w-7 text-right tabular-nums">{row.visits}</span>
+                    <span className="text-[#25D366] text-xs w-5 text-right tabular-nums">{row.clicks}</span>
                   </div>
-                  <span className="text-white/70 text-xs w-8 text-right">{row.visits}</span>
-                  <span className="text-[#25D366] text-xs w-5 text-right">{row.clicks}</span>
-                </div>
-              ))}
-              <div className="flex items-center gap-3 mt-2 pt-2 border-t border-white/5 text-[10px] text-white/30">
+                )
+              })}
+              <div className="flex items-center gap-3 pt-2 border-t border-white/5 text-[10px] text-white/30">
                 <span className="w-8" />
-                <span className="flex-1" />
-                <span className="w-8 text-right text-[#D4AF37]/60">visitas</span>
-                <span className="w-5 text-right text-[#25D366]/60">WA</span>
+                <div className="flex-1 flex items-center gap-4">
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-blue-400/60 inline-block" />Visitas</span>
+                  <span className="flex items-center gap-1"><span className="w-2 h-2 rounded-full bg-[#25D366]/70 inline-block" />WA</span>
+                </div>
+                <span className="w-7 text-right text-blue-300/50">{weekVisits}</span>
+                <span className="w-5 text-right text-[#25D366]/50">{weekClicks}</span>
               </div>
             </div>
           </div>

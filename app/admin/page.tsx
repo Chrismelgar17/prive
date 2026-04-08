@@ -4,7 +4,7 @@ import Link from 'next/link'
 import {
   ArrowLeft, Eye, MessageCircle, Users, UserCheck, PauseCircle, PlayCircle,
   TrendingUp, Shield, Plus, Pencil, Trash2, FileCheck, ImageIcon, Check,
-  Search, AlertTriangle, Save, X, Phone, Tag, FileText,
+  Search, AlertTriangle, Save, X, Phone, Tag, FileText, Percent, ArrowUpRight,
 } from 'lucide-react'
 import { Header } from '@/components/header'
 import { mockTherapists, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, MembershipLevel, Therapist } from '@/lib/mock-data'
@@ -92,6 +92,7 @@ export default function AdminPage() {
   const activeCount = profiles.length - pausedIds.size
   const totalViews = profiles.reduce((s, t) => s + (t.profileViews ?? 0), 0)
   const totalClicks = profiles.reduce((s, t) => s + (t.whatsappClicks ?? 0), 0)
+  const globalConversion = totalViews > 0 ? ((totalClicks / totalViews) * 100).toFixed(1) : '0.0'
   const unverifiedCount = profiles.filter(t => !t.docVerified || !t.contentVerified).length
   const topProfiles = useMemo(() => [...profiles].sort((a, b) => (b.profileViews ?? 0) - (a.profileViews ?? 0)).slice(0, 5), [profiles])
 
@@ -434,16 +435,17 @@ export default function AdminPage() {
         </div>
 
         {/* Metrics */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mb-6">
           {[
-            { icon: Users, label: 'Total Perfiles', value: profiles.length, color: 'text-white' },
-            { icon: UserCheck, label: 'Activos', value: activeCount, color: 'text-emerald-400' },
-            { icon: PauseCircle, label: 'Pausados', value: pausedIds.size, color: 'text-amber-400' },
-            { icon: Eye, label: 'Total Visitas', value: totalViews.toLocaleString('es-AR'), color: 'text-blue-400' },
-            { icon: MessageCircle, label: 'Clicks WA', value: totalClicks.toLocaleString('es-AR'), color: 'text-[#25D366]' },
-          ].map(({ icon: Icon, label, value, color }) => (
-            <div key={label} className="bg-[#1F0F2E] rounded-xl p-4 border border-white/5">
-              <Icon className={`h-5 w-5 mb-2 ${color}`} />
+            { icon: Users,       label: 'Perfiles',   value: profiles.length,                             color: 'text-white',       bg: 'bg-white/5'           },
+            { icon: UserCheck,   label: 'Activos',    value: activeCount,                                 color: 'text-emerald-400', bg: 'bg-emerald-500/10'    },
+            { icon: PauseCircle, label: 'Pausados',   value: pausedIds.size,                              color: 'text-amber-400',   bg: 'bg-amber-500/10'      },
+            { icon: Eye,         label: 'Visitas',    value: totalViews.toLocaleString('es-AR'),          color: 'text-blue-400',    bg: 'bg-blue-500/10'       },
+            { icon: MessageCircle, label: 'Clicks WA', value: totalClicks.toLocaleString('es-AR'),        color: 'text-[#25D366]',   bg: 'bg-emerald-500/10'    },
+            { icon: Percent,     label: 'Conv. Rate', value: `${globalConversion}%`,                      color: 'text-[#D4AF37]',   bg: 'bg-yellow-500/10'     },
+          ].map(({ icon: Icon, label, value, color, bg }) => (
+            <div key={label} className={`${bg} border border-white/5 rounded-xl p-4`}>
+              <Icon className={`h-4 w-4 mb-2 ${color}`} />
               <p className={`text-xl font-bold ${color}`}>{value}</p>
               <p className="text-xs text-white/40 mt-0.5">{label}</p>
             </div>
@@ -505,6 +507,8 @@ export default function AdminPage() {
                   <th className="text-left px-4 py-3 text-xs uppercase tracking-wider text-white/40 hidden md:table-cell">Nivel</th>
                   <th className="text-center px-4 py-3 text-xs uppercase tracking-wider text-white/40 hidden lg:table-cell">Verificación</th>
                   <th className="text-right px-4 py-3 text-xs uppercase tracking-wider text-white/40 hidden sm:table-cell">Visitas</th>
+                  <th className="text-right px-4 py-3 text-xs uppercase tracking-wider text-white/40 hidden md:table-cell">WA</th>
+                  <th className="text-right px-4 py-3 text-xs uppercase tracking-wider text-white/40 hidden xl:table-cell">Conv.</th>
                   <th className="text-center px-4 py-3 text-xs uppercase tracking-wider text-white/40">Estado</th>
                   <th className="text-right px-4 py-3 text-xs uppercase tracking-wider text-white/40">Acciones</th>
                 </tr>
@@ -514,6 +518,7 @@ export default function AdminPage() {
                   const isPaused = pausedIds.has(t.id)
                   const docV = t.docVerified ?? false
                   const contentV = t.contentVerified ?? false
+                  const conv = t.profileViews ? ((t.whatsappClicks ?? 0) / t.profileViews * 100).toFixed(1) : null
                   return (
                     <tr key={t.id} className={`border-b border-white/5 transition-colors ${isPaused ? 'opacity-50' : 'hover:bg-white/[0.02]'}`}>
                       <td className="px-4 py-3">
@@ -551,6 +556,18 @@ export default function AdminPage() {
                       <td className="px-4 py-3 text-right text-xs text-white/60 hidden sm:table-cell">
                         {t.profileViews?.toLocaleString('es-AR') ?? '—'}
                       </td>
+                      <td className="px-4 py-3 text-right text-xs text-[#25D366] hidden md:table-cell">
+                        {t.whatsappClicks ?? '—'}
+                      </td>
+                      <td className="px-4 py-3 text-right hidden xl:table-cell">
+                        {conv !== null ? (
+                          <span className={`inline-flex items-center gap-0.5 text-xs font-semibold ${
+                            Number(conv) >= 10 ? 'text-emerald-400' : Number(conv) >= 5 ? 'text-yellow-400' : 'text-white/40'
+                          }`}>
+                            <ArrowUpRight className="h-3 w-3" />{conv}%
+                          </span>
+                        ) : <span className="text-white/20 text-xs">—</span>}
+                      </td>
                       <td className="px-4 py-3 text-center">
                         <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold ${isPaused ? 'bg-amber-500/20 text-amber-400' : 'bg-emerald-500/20 text-emerald-400'}`}>
                           {isPaused ? 'Pausado' : 'Activo'}
@@ -584,7 +601,7 @@ export default function AdminPage() {
                 })}
                 {filtered.length === 0 && (
                   <tr>
-                    <td colSpan={7} className="px-4 py-14 text-center text-white/30 text-sm">
+                    <td colSpan={9} className="px-4 py-14 text-center text-white/30 text-sm">
                       No se encontraron perfiles.
                     </td>
                   </tr>
