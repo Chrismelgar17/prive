@@ -46,6 +46,11 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
           {therapist.name}, {therapist.age}
         </p>
         <p className="truncate text-[9px] text-white/70">{therapist.neighborhood}</p>
+        {therapist.categories && therapist.categories.length > 0 && (
+          <p className="truncate text-[8px] font-medium text-[#D4AF37]/80 uppercase tracking-wide mt-0.5">
+            {therapist.categories.slice(0, 2).join(' · ')}
+          </p>
+        )}
         {therapist.priceRange && (
           <p className="truncate text-[9px] font-semibold text-[#D4AF37] mt-0.5">{therapist.priceRange}</p>
         )}

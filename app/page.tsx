@@ -91,11 +91,15 @@ export default function HomePage() {
               <div className="relative w-full sm:w-auto" ref={dropdownRef}>
                 <button onClick={() => setFiltersOpen(!filtersOpen)} className="flex items-center justify-center gap-2 w-full sm:w-auto text-white font-medium px-6 py-2 hover:text-[#D4AF37] transition-colors">
                   <SlidersHorizontal className="h-4 w-4" /> + FILTROS
-                  {selectedFilters.length > 0 && <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D4AF37] text-black text-xs font-bold ml-1">{selectedFilters.length}</span>}
+                  {(selectedFilters.length + (selectedCategory !== 'Todos' ? 1 : 0)) > 0 && (
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-[#D4AF37] text-black text-xs font-bold ml-1">
+                      {selectedFilters.length + (selectedCategory !== 'Todos' ? 1 : 0)}
+                    </span>
+                  )}
                 </button>
                 
                 {filtersOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-full sm:w-56 bg-[#1A1838] border border-white/10 rounded-lg p-2 shadow-xl z-50 text-left">
+                  <div className="absolute right-0 top-full mt-2 w-full sm:w-64 bg-[#1A1838] border border-white/10 rounded-lg p-2 shadow-xl z-50 text-left">
                     <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-400">Tipo de Cita</p>
                     {FILTER_OPTIONS.map((option) => (
                       <button key={option.id} onClick={() => toggleFilter(option.id)} className="flex w-full items-center gap-3 px-3 py-2.5 text-sm text-white hover:text-[#D4AF37] rounded-md transition-colors">
@@ -105,6 +109,23 @@ export default function HomePage() {
                         {option.label}
                       </button>
                     ))}
+                    <div className="border-t border-white/10 mt-2 pt-2">
+                      <p className="px-3 py-2 text-xs uppercase tracking-wider text-gray-400">Categoría</p>
+                      {CATEGORY_OPTIONS.map(cat => (
+                        <button
+                          key={cat}
+                          onClick={() => { setSelectedCategory(cat); setFiltersOpen(false) }}
+                          className="flex w-full items-center gap-3 px-3 py-2.5 text-sm text-white hover:text-[#D4AF37] rounded-md transition-colors"
+                        >
+                          <span className={`flex h-4 w-4 items-center justify-center rounded-full border transition-colors ${
+                            selectedCategory === cat ? 'border-[#D4AF37] bg-[#D4AF37]' : 'border-white/30'
+                          }`}>
+                            {selectedCategory === cat && <Check className="h-2.5 w-2.5 text-black" />}
+                          </span>
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
