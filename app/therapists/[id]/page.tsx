@@ -26,7 +26,10 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   const levelInfo = MEMBERSHIP_LEVELS[therapist.level]
   const waMessage = encodeURIComponent(`Hola ${therapist.name}, vi tu aviso en Privé Relax`)
   const whatsappUrl = `https://wa.me/${therapist.whatsapp?.replace(/[^0-9]/g, '')}?text=${waMessage}`
-  const allPhotos = (therapist.gallery && therapist.gallery.length > 0) ? therapist.gallery : [therapist.photo_url]
+  const allPhotos = [
+    therapist.photo_url,
+    ...(therapist.gallery ?? []).filter(g => g && g !== therapist.photo_url),
+  ].filter(Boolean) as string[]
 
   const averageRating = therapist.reviews && therapist.reviews.length > 0
     ? Math.round((therapist.reviews.reduce((acc, r) => acc + r.rating, 0) / therapist.reviews.length) * 10) / 10
