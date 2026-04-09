@@ -63,12 +63,17 @@ function therapistToRow(t: Therapist) {
 // ─── Profiles (Supabase) ──────────────────────────────────────────────────────
 
 export async function getProfiles(): Promise<Therapist[]> {
-  const { data, error } = await supabase
-    .from('therapists')
-    .select('*')
-    .order('created_at', { ascending: false })
-  if (error) { console.error(error); return [] }
-  return (data ?? []).map(rowToTherapist)
+  try {
+    const { data, error } = await supabase
+      .from('therapists')
+      .select('*')
+      .order('created_at', { ascending: false })
+    if (error) { console.error(error); return [] }
+    return (data ?? []).map(rowToTherapist)
+  } catch (err) {
+    console.error('[getProfiles]', err)
+    return []
+  }
 }
 
 export async function upsertProfile(t: Therapist): Promise<void> {
