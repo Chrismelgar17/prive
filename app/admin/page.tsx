@@ -9,7 +9,8 @@ import {
 } from 'lucide-react'
 import { Header } from '@/components/header'
 import {
-  getStoredProfiles, persistProfiles, getSettings, saveSettings,
+  getProfiles, upsertProfile, deleteProfile, uploadPhoto,
+  getSettings, saveSettings,
   checkAdminAuth, setAdminAuth, clearAdminAuth, AdminSettings,
 } from '@/lib/store'
 import { mockTherapists, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, MembershipLevel, Therapist } from '@/lib/mock-data'
@@ -82,7 +83,9 @@ function Toggle({ value, onChange }: { value: boolean; onChange: () => void }) {
 }
 
 export default function AdminPage() {
-  const [profiles, setProfiles] = useState<Therapist[]>([...mockTherapists])
+  const [profiles, setProfiles] = useState<Therapist[]>([])
+  const [loadingProfiles, setLoadingProfiles] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [view, setView] = useState<'list' | 'form'>('list')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [deleteId, setDeleteId] = useState<string | null>(null)
@@ -101,11 +104,11 @@ export default function AdminPage() {
   const [settingsForm, setSettingsForm] = useState<AdminSettings>({ ownerWhatsapp: '', ownerEmail: '', adminPassword: 'prive2026' })
 
   useEffect(() => {
-    setProfiles(getStoredProfiles())
     const s = getSettings()
     setSettings(s)
     setSettingsForm(s)
     setIsAuthenticated(checkAdminAuth())
+    getProfiles().then(setProfiles).finally(() => setLoadingProfiles(false))
   }, [])
 
   // ── Metrics ──
@@ -156,46 +159,65 @@ export default function AdminPage() {
   }
 
   // ── Save ──
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!validate(form)) return
-    const existing = editingId ? profiles.find(p => p.id === editingId) : null
-    const updated: Therapist = {
-      id: editingId ?? String(Date.now()),
-      name: form.name.trim(), age: Number(form.age),
-      neighborhood: form.neighborhood.trim(),
-      location: form.location.trim() || form.neighborhood.trim(),
-      photo_url: form.photo_url.trim(), gallery: form.gallery,
-      description: form.description.trim(), categories: form.categories,
-      services: form.services, modality: form.modality,
-      priceRange: form.priceRange.trim(), level: form.level,
-      verified: form.verified, docVerified: form.docVerified,
-      contentVerified: form.contentVerified, whatsapp: form.whatsapp.trim(),
-      isOnline: form.isOnline,
-      profileViews: existing?.profileViews ?? 0,
-      whatsappClicks: existing?.whatsappClicks ?? 0,
-      reviews: existing?.reviews ?? [],
+    setSaving(true)
+    try {
+      const existing = editingId ? profiles.find(p => p.id === editingId) : null
+      const updated: Therapist = {
+        id: editingId ?? String(Date.now()),
+        name: form.name.trim(), age: Number(form.age),
+        neighborhood: form.neighborhood.trim(),
+        location: form.location.trim() || form.neighborhood.trim(),
+        photo_url: form.photo_url.trim(), gallery: form.gallery,
+        description: form.description.trim(), categories: form.categories,
+        services: form.services, modality: form.modality,
+        priceRange: form.priceRange.trim(), level: form.level,
+        verified: form.verified, docVerified: form.docVerified,
+        contentVerified: form.contentVerified, whatsapp: form.whatsapp.trim(),
+        isOnline: form.isOnline,
+        profileViews: existing?.profileViews ?? 0,
+        whatsappClicks: existing?.whatsappClicks ?? 0,
+        reviews: existing?.reviews ?? [],
+      }
+      await upsertProfile(updated)
+      const newProfiles = editingId
+        ? profiles.map(p => p.id === editingId ? updated : p)
+        : [updated, ...profiles]
+      setProfiles(newProfiles)
+      setView('list')
+    } catch (err) {
+      console.error(err)
+      alert('Error al guardar. Verificá la conexión a Supabase.')
+    } finally {
+      setSaving(false)
     }
-    const newProfiles = editingId
-      ? profiles.map(p => p.id === editingId ? updated : p)
-      : [updated, ...profiles]
-    setProfiles(newProfiles)
-    persistProfiles(newProfiles)
-    setView('list')
   }
 
   // ── Delete ──
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!deleteId) return
-    const newProfiles = profiles.filter(p => p.id !== deleteId)
-    setProfiles(newProfiles)
-    persistProfiles(newProfiles)
+    try {
+      await deleteProfile(deleteId)
+      setProfiles(prev => prev.filter(p => p.id !== deleteId))
+    } catch (err) {
+      console.error(err)
+      alert('Error al eliminar. Verificá la conexión a Supabase.')
+    }
     setDeleteId(null)
   }
 
-  const togglePause = (id: string) => {
-    const newProfiles = profiles.map(p => p.id === id ? { ...p, isPaused: !p.isPaused } : p)
-    setProfiles(newProfiles)
-    persistProfiles(newProfiles)
+  const togglePause = async (id: string) => {
+    const target = profiles.find(p => p.id === id)
+    if (!target) return
+    const updated = { ...target, isPaused: !target.isPaused }
+    try {
+      await upsertProfile(updated)
+      setProfiles(prev => prev.map(p => p.id === id ? updated : p))
+    } catch (err) {
+      console.error(err)
+      alert('Error al actualizar estado.')
+    }
   }
 
   // ── Auth ──
@@ -234,27 +256,29 @@ export default function AdminPage() {
     setForm(f => ({ ...f, services: [...f.services, s] })); setServiceInput('')
   }
 
-  // ── File → base64 ──
-  const readFileAsBase64 = (file: File): Promise<string> =>
-    new Promise((resolve, reject) => {
-      const reader = new FileReader()
-      reader.onload = () => resolve(reader.result as string)
-      reader.onerror = reject
-      reader.readAsDataURL(file)
-    })
-
+  // ── File → Supabase Storage ──
   const handleMainPhotoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]; if (!file) return
-    const b64 = await readFileAsBase64(file)
-    setForm(f => ({ ...f, photo_url: b64 }))
+    try {
+      const url = await uploadPhoto(file)
+      setForm(f => ({ ...f, photo_url: url }))
+    } catch (err) {
+      console.error(err)
+      alert('Error al subir la foto. Verificá la conexión a Supabase Storage.')
+    }
     e.target.value = ''
   }
 
   const handleGalleryUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? [])
     if (!files.length) return
-    const b64s = await Promise.all(files.map(readFileAsBase64))
-    setForm(f => ({ ...f, gallery: [...f.gallery, ...b64s] }))
+    try {
+      const urls = await Promise.all(files.map(uploadPhoto))
+      setForm(f => ({ ...f, gallery: [...f.gallery, ...urls] }))
+    } catch (err) {
+      console.error(err)
+      alert('Error al subir fotos de galería.')
+    }
     setGalleryKey(k => k + 1)
   }
 
@@ -312,8 +336,8 @@ export default function AdminPage() {
               <button onClick={() => setView('list')} className="px-4 py-2.5 rounded-lg border border-white/10 text-white/70 text-sm hover:bg-white/5 transition-colors">
                 Cancelar
               </button>
-              <button onClick={handleSave} className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] text-black font-semibold px-4 py-2.5 rounded-lg text-sm transition-colors">
-                <Save className="h-4 w-4" /> {editingId ? 'Guardar cambios' : 'Crear perfil'}
+              <button onClick={handleSave} disabled={saving} className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] disabled:opacity-60 text-black font-semibold px-4 py-2.5 rounded-lg text-sm transition-colors">
+                <Save className="h-4 w-4" /> {saving ? 'Guardando…' : editingId ? 'Guardar cambios' : 'Crear perfil'}
               </button>
             </div>
           </div>
@@ -542,8 +566,8 @@ export default function AdminPage() {
               <button onClick={() => setView('list')} className="px-5 py-2.5 rounded-lg border border-white/10 text-white/70 text-sm hover:bg-white/5 transition-colors">
                 Cancelar
               </button>
-              <button onClick={handleSave} className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] text-black font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">
-                <Save className="h-4 w-4" /> {editingId ? 'Guardar cambios' : 'Crear perfil'}
+              <button onClick={handleSave} disabled={saving} className="inline-flex items-center gap-2 bg-[#D4AF37] hover:bg-[#C49D2F] disabled:opacity-60 text-black font-semibold px-5 py-2.5 rounded-lg text-sm transition-colors">
+                <Save className="h-4 w-4" /> {saving ? 'Guardando…' : editingId ? 'Guardar cambios' : 'Crear perfil'}
               </button>
             </div>
           </div>
@@ -706,6 +730,13 @@ export default function AdminPage() {
 
         {/* Profile table */}
         <div className="bg-[#1F0F2E] rounded-xl border border-white/5 overflow-hidden">
+          {loadingProfiles ? (
+            <div className="flex items-center justify-center gap-3 py-16 text-white/40 text-sm">
+              <div className="w-5 h-5 rounded-full border-2 border-[#D4AF37] border-t-transparent animate-spin" />
+              Cargando perfiles…
+            </div>
+          ) : (
+            <>
           <div className="p-5 border-b border-white/5 flex items-center justify-between gap-4 flex-wrap">
             <h2 className="text-sm font-semibold uppercase tracking-widest text-[#D4AF37] shrink-0">
               Gestión de Perfiles
@@ -829,6 +860,8 @@ export default function AdminPage() {
               </tbody>
             </table>
           </div>
+            </>
+          )}
         </div>
       </main>
 

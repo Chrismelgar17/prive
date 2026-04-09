@@ -5,7 +5,7 @@ import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCh
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
 import { MEMBERSHIP_LEVELS, Therapist } from '@/lib/mock-data'
-import { getStoredProfiles } from '@/lib/store'
+import { getProfiles } from '@/lib/store'
 
 export default function TherapistProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -13,8 +13,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   const [activePhoto, setActivePhoto] = useState(0)
 
   useEffect(() => {
-    const stored = getStoredProfiles()
-    setTherapist(stored.find(t => t.id === id))
+    getProfiles().then(profiles => setTherapist(profiles.find(t => t.id === id)))
   }, [id])
 
   if (therapist === undefined) return (

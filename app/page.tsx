@@ -5,7 +5,7 @@ import { Header } from '@/components/header'
 import { MosaicCard } from '@/components/mosaic-card'
 import { SidebarNavigation } from '@/components/sidebar-navigation'
 import { searchTherapists, MembershipLevel, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, mockTherapists, Therapist } from '@/lib/mock-data'
-import { getStoredProfiles } from '@/lib/store'
+import { getProfiles } from '@/lib/store'
 
 const levelOrder: MembershipLevel[] = [5, 4, 3, 2, 1]
 const FILTER_OPTIONS = [ { id: 'hotel', label: 'CITA HOTEL' }, { id: 'depto', label: 'CITA DEPTO' }, { id: 'domicilio', label: 'CITA DOMICILIO' } ]
@@ -18,11 +18,11 @@ export default function HomePage() {
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState('Todos')
-  const [allProfiles, setAllProfiles] = useState<Therapist[]>([...mockTherapists])
+  const [allProfiles, setAllProfiles] = useState<Therapist[]>([])
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    setAllProfiles(getStoredProfiles())
+    getProfiles().then(setAllProfiles)
   }, [])
 
   useEffect(() => {
