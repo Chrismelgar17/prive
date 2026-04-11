@@ -35,7 +35,7 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
   const isDiamond = therapist.level === 5
   const firstCategory = therapist.categories?.[0]
   const ringClass = isDiamond
-    ? 'ring-1 ring-primary/40'
+    ? 'ring-2 ring-[#D4AF37]/80 shadow-[0_0_14px_2px_rgba(212,175,55,0.35)]'
     : firstCategory && CATEGORY_RING[firstCategory]
       ? `ring-1 ${CATEGORY_RING[firstCategory]}`
       : ''
@@ -71,7 +71,9 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
           <p className="truncate text-[9px] font-semibold text-[#D4AF37] mt-0.5">{therapist.priceRange}</p>
         )}
       </div>
-      {isDiamond && <div className="shimmer-gold pointer-events-none absolute inset-0 opacity-30" />}
+      {isDiamond && (
+        <div className="pointer-events-none absolute inset-0 rounded-md ring-2 ring-inset ring-[#D4AF37]/30" />
+      )}
     </Link>
   )
 }
