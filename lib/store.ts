@@ -119,7 +119,7 @@ const AUTH_KEY = 'prive_admin_auth'
 const DEFAULT_SETTINGS: AdminSettings = {
   ownerWhatsapp: '',
   ownerEmail: '',
-  adminPassword: 'prive2026',
+  adminPassword: 'Pr1v3@Adm1n#2026!',
 }
 
 function isBrowser() { return typeof window !== 'undefined' }
