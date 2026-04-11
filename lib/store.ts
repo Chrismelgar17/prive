@@ -29,6 +29,9 @@ function rowToTherapist(row: any): Therapist {
     docVerified: row.doc_verified ?? false,
     contentVerified: row.content_verified ?? false,
     isPaused: row.is_paused ?? false,
+    workingHours: row.working_hours ?? '',
+    availableDays: row.available_days ?? [],
+    reviewsEnabled: row.reviews_enabled ?? true,
   }
 }
 
@@ -57,6 +60,9 @@ function therapistToRow(t: Therapist) {
     doc_verified: t.docVerified ?? false,
     content_verified: t.contentVerified ?? false,
     is_paused: t.isPaused ?? false,
+    working_hours: t.workingHours ?? '',
+    available_days: t.availableDays ?? [],
+    reviews_enabled: t.reviewsEnabled ?? true,
   }
 }
 

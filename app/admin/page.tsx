@@ -5,7 +5,7 @@ import {
   ArrowLeft, Eye, MessageCircle, Users, UserCheck, PauseCircle, PlayCircle,
   TrendingUp, Shield, Plus, Pencil, Trash2, FileCheck, ImageIcon, Check,
   Search, AlertTriangle, Save, X, Phone, Tag, FileText, Percent, ArrowUpRight,
-  Settings, LogOut, ExternalLink, Mail,
+  Settings, LogOut, ExternalLink, Mail, Clock, CalendarDays, MessageSquareOff,
 } from 'lucide-react'
 import { Header } from '@/components/header'
 import {
@@ -13,7 +13,7 @@ import {
   getSettings, saveSettings,
   checkAdminAuth, setAdminAuth, clearAdminAuth, AdminSettings,
 } from '@/lib/store'
-import { mockTherapists, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, MembershipLevel, Therapist } from '@/lib/mock-data'
+import { mockTherapists, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, DAYS_OF_WEEK, MembershipLevel, Therapist } from '@/lib/mock-data'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const MODALITY_OPTIONS = ['Lugar propio', 'Domicilio', 'Hotel']
@@ -37,6 +37,7 @@ interface PF {
   priceRange: string; level: MembershipLevel
   verified: boolean; docVerified: boolean; contentVerified: boolean
   whatsapp: string; isOnline: boolean
+  workingHours: string; availableDays: string[]; reviewsEnabled: boolean
 }
 const INIT: PF = {
   name: '', age: '', neighborhood: '', location: '', photo_url: '',
@@ -44,6 +45,7 @@ const INIT: PF = {
   modality: [], priceRange: '', level: 1,
   verified: false, docVerified: false, contentVerified: false,
   whatsapp: '', isOnline: false,
+  workingHours: '', availableDays: [], reviewsEnabled: true,
 }
 type FE = Partial<Record<keyof PF, string>>
 
@@ -154,6 +156,8 @@ export default function AdminPage() {
       level: t.level, verified: t.verified,
       docVerified: t.docVerified ?? false, contentVerified: t.contentVerified ?? false,
       whatsapp: t.whatsapp ?? '', isOnline: t.isOnline ?? false,
+      workingHours: t.workingHours ?? '', availableDays: t.availableDays ?? [],
+      reviewsEnabled: t.reviewsEnabled ?? true,
     })
     setErrors({}); setGalleryInput(''); setServiceInput(''); setEditingId(t.id); setView('form')
   }
@@ -176,6 +180,9 @@ export default function AdminPage() {
         verified: form.verified, docVerified: form.docVerified,
         contentVerified: form.contentVerified, whatsapp: form.whatsapp.trim(),
         isOnline: form.isOnline,
+        workingHours: form.workingHours.trim(),
+        availableDays: form.availableDays,
+        reviewsEnabled: form.reviewsEnabled,
         profileViews: existing?.profileViews ?? 0,
         whatsappClicks: existing?.whatsappClicks ?? 0,
         reviews: existing?.reviews ?? [],
@@ -500,6 +507,48 @@ export default function AdminPage() {
                   <input className={inputCls()} value={form.priceRange}
                     onChange={e => setForm(f => ({ ...f, priceRange: e.target.value }))} placeholder="$5.000 - $10.000" />
                 </FInput>
+              </div>
+            </div>
+
+            {/* ── Disponibilidad ── */}
+            <div className="bg-[#1F0F2E] rounded-xl border border-white/5 p-6">
+              <SectionHead icon={Clock} label="Disponibilidad" />
+              <div className="space-y-5">
+                <FInput label="Horario de atención">
+                  <input className={inputCls()} value={form.workingHours}
+                    onChange={e => setForm(f => ({ ...f, workingHours: e.target.value }))}
+                    placeholder="10:00 - 22:00" />
+                </FInput>
+                <FInput label="Días disponibles">
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {DAYS_OF_WEEK.map(day => (
+                      <button key={day} type="button"
+                        onClick={() => setForm(f => ({
+                          ...f,
+                          availableDays: f.availableDays.includes(day)
+                            ? f.availableDays.filter(d => d !== day)
+                            : [...f.availableDays, day],
+                        }))}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
+                          form.availableDays.includes(day)
+                            ? 'bg-[#D4AF37] text-black border-[#D4AF37]'
+                            : 'bg-transparent text-white/60 border-white/10 hover:border-white/30'
+                        }`}>
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                </FInput>
+                <label className="flex items-center gap-4 p-3 rounded-lg border border-white/5 hover:bg-white/[0.02] cursor-pointer transition-colors">
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${form.reviewsEnabled ? 'bg-emerald-500/20' : 'bg-white/5'}`}>
+                    <MessageSquareOff className={`h-5 w-5 ${form.reviewsEnabled ? 'text-emerald-400' : 'text-white/20'}`} />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">Comentarios habilitados</p>
+                    <p className="text-xs text-white/40 mt-0.5">Mostrar la sección de reseñas en el perfil público</p>
+                  </div>
+                  <Toggle value={form.reviewsEnabled} onChange={() => setForm(f => ({ ...f, reviewsEnabled: !f.reviewsEnabled }))} />
+                </label>
               </div>
             </div>
 

@@ -20,14 +20,29 @@ const levelColors: Record<MembershipLevel, string> = {
   1: 'text-gray-400',
 }
 
+const CATEGORY_RING: Record<string, string> = {
+  'VIP': 'ring-[#D4AF37]/60',
+  'Premium': 'ring-rose-500/50',
+  'Relajante': 'ring-teal-400/50',
+  'Terapéutico': 'ring-blue-400/50',
+  'Especial': 'ring-purple-400/50',
+  'Nuevas': 'ring-emerald-400/50',
+}
+
 export function MosaicCard({ therapist }: { therapist: Therapist }) {
   const LevelIcon = levelIcons[therapist.level]
   const isDiamond = therapist.level === 5
+  const firstCategory = therapist.categories?.[0]
+  const ringClass = isDiamond
+    ? 'ring-1 ring-primary/40'
+    : firstCategory && CATEGORY_RING[firstCategory]
+      ? `ring-1 ${CATEGORY_RING[firstCategory]}`
+      : ''
 
   return (
     <Link
       href={`/therapists/${therapist.id}`}
-      className={`group relative block aspect-[4/5] overflow-hidden rounded-md ${isDiamond ? 'ring-1 ring-primary/40' : ''}`}
+      className={`group relative block aspect-[4/5] overflow-hidden rounded-md ${ringClass}`}
     >
       <img
         src={therapist.photo_url}

@@ -1,7 +1,7 @@
 'use client'
 import { use, useState, useEffect } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCheck } from 'lucide-react'
+import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCheck, ChevronLeft, ChevronRight, Clock, CalendarDays } from 'lucide-react'
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
 import { MEMBERSHIP_LEVELS, Therapist } from '@/lib/mock-data'
@@ -67,6 +67,29 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
                   <span className="text-emerald-400 text-[10px] font-semibold uppercase">Verificada</span>
                 </div>
+              )}
+              {allPhotos.length > 1 && (
+                <>
+                  <button
+                    onClick={() => setActivePhoto(i => (i - 1 + allPhotos.length) % allPhotos.length)}
+                    className="absolute left-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all"
+                  >
+                    <ChevronLeft className="h-5 w-5" />
+                  </button>
+                  <button
+                    onClick={() => setActivePhoto(i => (i + 1) % allPhotos.length)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </button>
+                  <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+                    {allPhotos.map((_, i) => (
+                      <button key={i} onClick={() => setActivePhoto(i)}
+                        className={`w-1.5 h-1.5 rounded-full transition-all ${i === activePhoto ? 'bg-[#D4AF37] scale-125' : 'bg-white/40'}`}
+                      />
+                    ))}
+                  </div>
+                </>
               )}
             </div>
 
@@ -144,6 +167,33 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
               </div>
             )}
 
+            {/* Hours & Days */}
+            {(therapist.workingHours || (therapist.availableDays && therapist.availableDays.length > 0)) && (
+              <div>
+                <h2 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] mb-3">Disponibilidad</h2>
+                <div className="bg-black/20 border border-white/5 rounded-xl p-4 space-y-3">
+                  {therapist.workingHours && (
+                    <div className="flex items-center gap-2.5">
+                      <Clock className="h-4 w-4 text-[#D4AF37] shrink-0" />
+                      <span className="text-sm text-white/80">{therapist.workingHours}</span>
+                    </div>
+                  )}
+                  {therapist.availableDays && therapist.availableDays.length > 0 && (
+                    <div className="flex items-start gap-2.5">
+                      <CalendarDays className="h-4 w-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                      <div className="flex flex-wrap gap-1.5">
+                        {therapist.availableDays.map(day => (
+                          <span key={day} className="bg-[#D4AF37]/10 text-[#D4AF37] text-[10px] font-medium px-2 py-0.5 rounded-full border border-[#D4AF37]/20">
+                            {day}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Amenities */}
             {therapist.amenities && therapist.amenities.length > 0 && (
               <div>
@@ -204,7 +254,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
         </div>
 
         {/* Reviews */}
-        {therapist.reviews && therapist.reviews.length > 0 && (
+        {therapist.reviewsEnabled !== false && therapist.reviews && therapist.reviews.length > 0 && (
           <section className="mt-10">
             <h2 className="text-xs font-semibold uppercase tracking-widest text-[#D4AF37] mb-4">Reseñas</h2>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">

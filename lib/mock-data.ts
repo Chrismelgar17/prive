@@ -11,6 +11,8 @@ export const MEMBERSHIP_LEVELS = {
 export const SERVICE_CATEGORIES = ['VIP', 'Premium', 'Relajante', 'Terapéutico', 'Especial', 'Nuevas'] as const
 export type ServiceCategory = typeof SERVICE_CATEGORIES[number]
 
+export const DAYS_OF_WEEK = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] as const
+
 export interface Review {
   id: string
   author: string
@@ -43,6 +45,9 @@ export interface Therapist {
   docVerified?: boolean
   contentVerified?: boolean
   isPaused?: boolean
+  workingHours?: string      // e.g. '10:00 - 22:00'
+  availableDays?: string[]   // ['Lunes', 'Martes', ...]
+  reviewsEnabled?: boolean
 }
 
 export const mockTherapists: Therapist[] = [
