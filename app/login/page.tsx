@@ -201,7 +201,7 @@ export default function LoginPage() {
         <div className="mt-8 text-center">
           <p className="text-white/40 text-sm mb-3">¿Tenés dudas? Hablá con nosotros directamente</p>
           <a
-            href="https://wa.me/5491100000000"
+            href="https://wa.me/541140808020"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] border border-[#25D366]/30 px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors"
