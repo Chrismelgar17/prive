@@ -13,7 +13,9 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   const [activePhoto, setActivePhoto] = useState(0)
 
   useEffect(() => {
-    getProfiles().then(profiles => setTherapist(profiles.find(t => t.id === id)))
+    getProfiles().then(profiles =>
+      setTherapist(profiles.find(t => t.id === id || id.startsWith(t.id + '-')))
+    )
   }, [id])
 
   if (therapist === undefined) return (

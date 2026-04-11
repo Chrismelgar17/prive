@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { ArrowLeft, Eye, MessageCircle, Trophy, TrendingUp, Globe, User, ArrowUpRight, Percent } from 'lucide-react'
 import { Header } from '@/components/header'
 import { mockTherapists, MEMBERSHIP_LEVELS } from '@/lib/mock-data'
+import { therapistUrl } from '@/lib/utils'
 
 // Demo: shows stats for the first therapist (Valentina)
 const therapist = mockTherapists[0]
@@ -57,7 +58,7 @@ export default function DashboardPage() {
             <span className="text-xs text-[#D4AF37] font-medium">{levelInfo.name}</span>
           </div>
           <Link
-            href={`/therapists/${therapist.id}`}
+            href={therapistUrl(therapist.id, therapist.name)}
             className="ml-auto flex items-center gap-2 bg-[#D4AF37]/10 hover:bg-[#D4AF37]/20 text-[#D4AF37] border border-[#D4AF37]/30 text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
           >
             <User className="h-4 w-4" /> Ver mi perfil

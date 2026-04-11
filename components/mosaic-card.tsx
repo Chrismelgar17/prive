@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Diamond, Star, Zap, ShieldCheck, User } from 'lucide-react'
 import { Therapist, MembershipLevel } from '@/lib/mock-data'
+import { therapistUrl } from '@/lib/utils'
 
 const levelIcons: Record<MembershipLevel, React.ElementType> = {
   5: Diamond,
@@ -41,7 +42,7 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
 
   return (
     <Link
-      href={`/therapists/${therapist.id}`}
+      href={therapistUrl(therapist.id, therapist.name)}
       className={`group relative block aspect-[4/5] overflow-hidden rounded-md ${ringClass}`}
     >
       <img

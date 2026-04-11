@@ -1,6 +1,7 @@
 'use client'
 import { useState, useMemo, useEffect } from 'react'
 import Link from 'next/link'
+import { therapistUrl } from '@/lib/utils'
 import {
   ArrowLeft, Eye, MessageCircle, Users, UserCheck, PauseCircle, PlayCircle,
   TrendingUp, Shield, Plus, Pencil, Trash2, FileCheck, ImageIcon, Check,
@@ -827,7 +828,7 @@ export default function AdminPage() {
                             <img src={t.photo_url} alt={t.name} className="w-full h-full object-cover" />
                           </div>
                           <div>
-                            <Link href={`/therapists/${t.id}`} className="text-white font-medium hover:text-[#D4AF37] transition-colors text-sm">
+                            <Link href={therapistUrl(t.id, t.name)} className="text-white font-medium hover:text-[#D4AF37] transition-colors text-sm">
                               {t.name}
                             </Link>
                             <p className="text-[10px] text-white/40">{t.age} años</p>
