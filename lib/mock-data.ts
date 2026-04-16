@@ -1,14 +1,14 @@
 export type MembershipLevel = 1 | 2 | 3 | 4 | 5
 
 export const MEMBERSHIP_LEVELS = {
-  5: { name: 'Black Diamond', icon: 'Diamond', color: 'text-primary' },
-  4: { name: 'Ruby Select', icon: 'Star', color: 'text-red-500' },
-  3: { name: 'Sapphire Club', icon: 'Zap', color: 'text-blue-400' },
-  2: { name: 'Golden Experience', icon: 'ShieldCheck', color: 'text-yellow-500' },
-  1: { name: 'Silver Touch', icon: 'User', color: 'text-gray-400' },
+  5: { name: 'Destacada', icon: 'Diamond', color: 'text-primary' },
+  4: { name: 'Preferida', icon: 'Star', color: 'text-red-500' },
+  3: { name: 'Recomendada', icon: 'Zap', color: 'text-blue-400' },
+  2: { name: 'Certificada', icon: 'ShieldCheck', color: 'text-yellow-500' },
+  1: { name: 'Activa', icon: 'User', color: 'text-gray-400' },
 } as const
 
-export const SERVICE_CATEGORIES = ['VIP', 'Premium', 'Relajante', 'Terapéutico', 'Especial', 'Nuevas'] as const
+export const SERVICE_CATEGORIES = ['Relajante', 'Terapéutico', 'Descontracturante', 'Deportivo', 'Reflexología', 'Drenaje linfático', 'Bienestar integral'] as const
 export type ServiceCategory = typeof SERVICE_CATEGORIES[number]
 
 export const DAYS_OF_WEEK = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'] as const

@@ -8,8 +8,8 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'Privé Relax - Directorio Premium de Masajistas',
-  description: 'Descubrí las mejores masajistas verificadas en Buenos Aires. Directorio exclusivo con perfiles premium.',
+  title: 'Privé Relax - Plataforma de Masajes Profesionales en Buenos Aires',
+  description: 'Encontrá profesionales independientes de masoterapia, relajación y bienestar en Buenos Aires. Explorá perfiles por zona, especialidad y modalidad de atención.',
   generator: 'v0.app',
   icons: {
     icon: [

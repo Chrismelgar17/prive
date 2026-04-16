@@ -16,12 +16,9 @@ export function Footer() {
               Privé Relax
             </span>
             <p className="mt-3 text-xs text-white/40 leading-relaxed max-w-xs">
-              Catálogo publicitario de anunciantes independientes verificadas en Buenos Aires.
+              Plataforma de difusión de servicios profesionales de masoterapia y bienestar en Buenos Aires.
               No intermediamos en pagos ni acuerdos entre partes.
             </p>
-            <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-white/10 px-2.5 py-1 text-[10px] font-semibold text-white/40 uppercase tracking-widest">
-              +18 Solo adultos
-            </span>
           </div>
 
           {/* Column 2 — Directorio */}
@@ -67,7 +64,10 @@ export function Footer() {
             </h3>
             <div className="space-y-2.5 text-[11px] text-white/30 leading-relaxed">
               <p>
-                Privé Relax es un <strong className="text-white/40">catálogo publicitario</strong>. No presta, contrata ni intermedia servicios.
+                No se admiten publicaciones vinculadas a servicios sexuales, acompañamiento o actividades íntimas.
+              </p>
+              <p>
+                Privé Relax es una <strong className="text-white/40">plataforma de difusión</strong>. No presta, contrata ni intermedia servicios.
               </p>
               <p>
                 Los anunciantes operan de forma autónoma e independiente. Todo acuerdo es exclusivo entre las partes.

@@ -8,7 +8,7 @@ import { searchTherapists, MembershipLevel, MEMBERSHIP_LEVELS, SERVICE_CATEGORIE
 import { getProfiles } from '@/lib/store'
 
 const levelOrder: MembershipLevel[] = [5, 4, 3, 2, 1]
-const FILTER_OPTIONS = [ { id: 'hotel', label: 'CITA HOTEL' }, { id: 'depto', label: 'CITA DEPTO' }, { id: 'domicilio', label: 'CITA DOMICILIO' } ]
+const FILTER_OPTIONS = [ { id: 'hotel', label: 'Atención en hotel' }, { id: 'depto', label: 'Lugar propio' }, { id: 'domicilio', label: 'A domicilio' } ]
 const CATEGORY_OPTIONS = ['Todos', ...SERVICE_CATEGORIES]
 
 export default function HomePage() {
@@ -68,10 +68,11 @@ export default function HomePage() {
         <section className="relative w-full px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto flex w-full max-w-4xl flex-col items-center justify-center text-center">
             <h1 className="text-4xl font-bold text-white md:text-5xl">
-              Directorio Premium de <span className="text-white">Masajistas</span>
+              Masajes Profesionales y <span className="text-[#D4AF37]">Bienestar</span> en Buenos Aires
             </h1>
             <p className="mt-4 text-sm text-gray-400 md:text-base">
-              Catálogo publicitario de anunciantes independientes verificadas en Buenos Aires.
+              Encontrá profesionales independientes de masoterapia, relajación y bienestar.
+              Explorá perfiles por zona, especialidad y modalidad de atención.
             </p>
 
             {/* Category Pills */}
@@ -141,6 +142,19 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* Disclaimer */}
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 mb-8">
+          <div className="flex items-start gap-3 bg-black/30 border border-white/10 rounded-xl px-5 py-4 text-xs text-white/50 leading-relaxed">
+            <svg className="h-4 w-4 text-[#D4AF37] shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>
+              <strong className="text-white/70">Privé Relax</strong> es una plataforma de difusión de servicios profesionales de{' '}
+              <strong className="text-white/70">masoterapia, relajación y bienestar</strong>.
+              No se permiten ni promocionan servicios sexuales, de acompañamiento ni actividades íntimas.
+              Los profesionales operan de forma autónoma e independiente.
+            </span>
+          </div>
+        </div>
 
         {levelOrder.map((level) => {
           const therapists = groupedByLevel[level]

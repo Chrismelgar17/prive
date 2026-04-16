@@ -22,12 +22,13 @@ const levelColors: Record<MembershipLevel, string> = {
 }
 
 const CATEGORY_RING: Record<string, string> = {
-  'VIP': 'ring-[#D4AF37]/60',
-  'Premium': 'ring-rose-500/50',
-  'Relajante': 'ring-teal-400/50',
-  'Terapéutico': 'ring-blue-400/50',
-  'Especial': 'ring-purple-400/50',
-  'Nuevas': 'ring-emerald-400/50',
+  'Relajante':           'ring-teal-400/50',
+  'Terapéutico':         'ring-blue-400/50',
+  'Descontracturante':   'ring-orange-400/50',
+  'Deportivo':           'ring-emerald-400/50',
+  'Reflexología':        'ring-purple-400/50',
+  'Drenaje linfático':   'ring-cyan-400/50',
+  'Bienestar integral':  'ring-rose-400/50',
 }
 
 export function MosaicCard({ therapist }: { therapist: Therapist }) {
