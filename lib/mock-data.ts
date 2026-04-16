@@ -48,6 +48,7 @@ export interface Therapist {
   workingHours?: string      // e.g. '10:00 - 22:00'
   availableDays?: string[]   // ['Lunes', 'Martes', ...]
   reviewsEnabled?: boolean
+  sortOrder?: number
 }
 
 export const mockTherapists: Therapist[] = [

@@ -7,12 +7,14 @@ import {
   TrendingUp, Shield, Plus, Pencil, Trash2, FileCheck, ImageIcon, Check,
   Search, AlertTriangle, Save, X, Phone, Tag, FileText, Percent, ArrowUpRight,
   Settings, LogOut, ExternalLink, Mail, Clock, CalendarDays, MessageSquareOff,
+  ChevronUp, ChevronDown,
 } from 'lucide-react'
 import { Header } from '@/components/header'
 import {
   getProfiles, upsertProfile, deleteProfile, uploadPhoto,
   getSettings, saveSettings,
   checkAdminAuth, setAdminAuth, clearAdminAuth, AdminSettings,
+  updateSortOrders,
 } from '@/lib/store'
 import { mockTherapists, MEMBERSHIP_LEVELS, SERVICE_CATEGORIES, DAYS_OF_WEEK, MembershipLevel, Therapist } from '@/lib/mock-data'
 
@@ -187,11 +189,12 @@ export default function AdminPage() {
         profileViews: existing?.profileViews ?? 0,
         whatsappClicks: existing?.whatsappClicks ?? 0,
         reviews: existing?.reviews ?? [],
+        sortOrder: editingId ? (existing?.sortOrder ?? 0) : profiles.length,
       }
       await upsertProfile(updated)
       const newProfiles = editingId
         ? profiles.map(p => p.id === editingId ? updated : p)
-        : [updated, ...profiles]
+        : [...profiles, updated]
       setProfiles(newProfiles)
       setView('list')
     } catch (err) {
@@ -225,6 +228,22 @@ export default function AdminPage() {
     } catch (err) {
       console.error(err)
       alert('Error al actualizar estado.')
+    }
+  }
+
+  const moveProfile = async (id: string, dir: 'up' | 'down') => {
+    const idx = profiles.findIndex(p => p.id === id)
+    const target = dir === 'up' ? idx - 1 : idx + 1
+    if (target < 0 || target >= profiles.length) return
+    const reordered = [...profiles]
+    ;[reordered[idx], reordered[target]] = [reordered[target], reordered[idx]]
+    const withOrder = reordered.map((p, i) => ({ ...p, sortOrder: i }))
+    setProfiles(withOrder)
+    try {
+      await updateSortOrders(withOrder.map(p => ({ id: p.id, sortOrder: p.sortOrder! })))
+    } catch (err) {
+      console.error(err)
+      setProfiles(profiles)
     }
   }
 
@@ -876,6 +895,18 @@ export default function AdminPage() {
                       </td>
                       <td className="px-4 py-3">
                         <div className="flex items-center justify-end gap-1">
+                          {!search && (
+                            <>
+                              <button onClick={() => moveProfile(t.id, 'up')} disabled={profiles.indexOf(t) === 0} title="Mover arriba"
+                                className="inline-flex items-center justify-center w-7 h-7 rounded-md border border-white/10 text-white/40 hover:text-white hover:border-white/30 disabled:opacity-20 disabled:cursor-not-allowed transition-colors">
+                                <ChevronUp className="h-3.5 w-3.5" />
+                              </button>
+                              <button onClick={() => moveProfile(t.id, 'down')} disabled={profiles.indexOf(t) === profiles.length - 1} title="Mover abajo"
+                                className="inline-flex items-center justify-center w-7 h-7 rounded-md border border-white/10 text-white/40 hover:text-white hover:border-white/30 disabled:opacity-20 disabled:cursor-not-allowed transition-colors">
+                                <ChevronDown className="h-3.5 w-3.5" />
+                              </button>
+                            </>
+                          )}
                           <button onClick={() => openEdit(t)} title="Editar"
                             className="inline-flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-md border border-blue-500/30 text-blue-400 hover:bg-blue-500/10 transition-colors">
                             <Pencil className="h-3.5 w-3.5" />

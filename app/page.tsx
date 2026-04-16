@@ -19,10 +19,11 @@ export default function HomePage() {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([])
   const [selectedCategory, setSelectedCategory] = useState('Todos')
   const [allProfiles, setAllProfiles] = useState<Therapist[]>([])
+  const [loadingProfiles, setLoadingProfiles] = useState(true)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    getProfiles().then(setAllProfiles)
+    getProfiles().then(setAllProfiles).finally(() => setLoadingProfiles(false))
   }, [])
 
   useEffect(() => {
@@ -155,6 +156,17 @@ export default function HomePage() {
             </span>
           </div>
         </div>
+
+        {loadingProfiles && (
+          <section className="px-4 sm:px-6 mb-8">
+            <div className="h-4 w-32 bg-white/5 rounded animate-pulse mb-4 ml-2" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="aspect-[4/5] rounded-md bg-white/5 animate-pulse" />
+              ))}
+            </div>
+          </section>
+        )}
 
         {levelOrder.map((level) => {
           const therapists = groupedByLevel[level]

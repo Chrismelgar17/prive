@@ -32,6 +32,7 @@ function rowToTherapist(row: any): Therapist {
     workingHours: row.working_hours ?? '',
     availableDays: row.available_days ?? [],
     reviewsEnabled: row.reviews_enabled ?? true,
+    sortOrder: row.sort_order ?? 0,
   }
 }
 
@@ -63,6 +64,7 @@ function therapistToRow(t: Therapist) {
     working_hours: t.workingHours ?? '',
     available_days: t.availableDays ?? [],
     reviews_enabled: t.reviewsEnabled ?? true,
+    sort_order: t.sortOrder ?? 0,
   }
 }
 
@@ -73,6 +75,7 @@ export async function getProfiles(): Promise<Therapist[]> {
     const { data, error } = await supabase
       .from('therapists')
       .select('*')
+      .order('sort_order', { ascending: true })
       .order('created_at', { ascending: false })
     if (error) { console.error(error); return [] }
     return (data ?? []).map(rowToTherapist)
@@ -90,6 +93,14 @@ export async function upsertProfile(t: Therapist): Promise<void> {
 export async function deleteProfile(id: string): Promise<void> {
   const { error } = await supabase.from('therapists').delete().eq('id', id)
   if (error) throw error
+}
+
+export async function updateSortOrders(items: Array<{ id: string; sortOrder: number }>): Promise<void> {
+  await Promise.all(
+    items.map(({ id, sortOrder }) =>
+      supabase.from('therapists').update({ sort_order: sortOrder }).eq('id', id)
+    )
+  )
 }
 
 // ─── Photo upload (Supabase Storage) ─────────────────────────────────────────
