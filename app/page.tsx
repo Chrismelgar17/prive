@@ -185,6 +185,119 @@ export default function HomePage() {
             </section>
           )
         })}
+
+        {/* SEO Content Section */}
+        <section className="mx-auto max-w-4xl px-4 sm:px-6 py-12 mt-4 border-t border-white/10">
+          <div className="space-y-8 text-white/70 text-sm leading-relaxed">
+
+            <div>
+              <h2 className="text-xl font-semibold text-white mb-3">Masajes profesionales en Argentina: bienestar, relajación y alivio muscular</h2>
+              <p>
+                Los masajes profesionales son una de las mejores opciones para quienes buscan aliviar tensiones, reducir el estrés y mejorar el bienestar general. Hoy en día, muchas personas buscan términos como masajes descontracturantes, masajes relajantes, masajes terapéuticos, masajes a domicilio o masajistas profesionales, por lo que contar con un perfil bien estructurado y claro puede ayudarte a posicionarte mejor.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-3">¿Qué son los masajes profesionales?</h2>
+              <p className="mb-3">
+                Los masajes profesionales son técnicas manuales aplicadas sobre músculos y tejidos blandos con distintos objetivos: relajar el cuerpo, aliviar contracturas, mejorar la circulación, disminuir el estrés y favorecer el bienestar físico y mental.
+              </p>
+              <p className="mb-2">Dependiendo del tipo de servicio, un masaje puede estar orientado a:</p>
+              <ul className="list-disc list-inside space-y-1 pl-2 text-white/60">
+                <li>Aliviar dolores musculares</li>
+                <li>Reducir tensión acumulada</li>
+                <li>Mejorar la movilidad</li>
+                <li>Promover descanso y relajación</li>
+                <li>Complementar rutinas de bienestar</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-4">¿Qué tipos de masajes existen?</h2>
+              <div className="space-y-4">
+                <div>
+                  <h3 className="font-semibold text-white/90 mb-1">Masajes descontracturantes</h3>
+                  <p>Los masajes descontracturantes están orientados a disminuir la tensión muscular acumulada, especialmente en zonas como cuello, espalda, hombros y cintura. Son muy buscados por personas que trabajan muchas horas sentadas, entrenan intensamente o atraviesan períodos de estrés.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white/90 mb-1">Masajes relajantes</h3>
+                  <p>Los masajes relajantes tienen como objetivo principal generar una sensación profunda de descanso, bienestar y desconexión. Suelen realizarse con movimientos suaves, continuos y armónicos, ideales para bajar el estrés cotidiano.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white/90 mb-1">Masajes terapéuticos</h3>
+                  <p>Los masajes terapéuticos pueden enfocarse en molestias físicas concretas, tensión localizada o recuperación muscular. Muchas personas los eligen para complementar hábitos de salud y mejorar su calidad de vida.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white/90 mb-1">Reflexología podal</h3>
+                  <p>La reflexología podal trabaja puntos específicos de los pies vinculados, desde una mirada de bienestar, con distintas zonas del cuerpo. Es una técnica muy elegida por quienes buscan relajación profunda y equilibrio general.</p>
+                </div>
+                <div>
+                  <h3 className="font-semibold text-white/90 mb-1">Masajes a domicilio</h3>
+                  <p>Los masajes a domicilio son una alternativa cada vez más demandada por comodidad, privacidad y ahorro de tiempo. Permiten recibir una sesión profesional sin necesidad de trasladarse.</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-3">Beneficios de los masajes</h2>
+              <p className="mb-2">Los beneficios de recibir masajes profesionales pueden variar según la técnica aplicada y la necesidad de cada persona, pero entre los más valorados se encuentran:</p>
+              <ul className="list-disc list-inside space-y-1 pl-2 text-white/60">
+                <li>Alivio de tensión muscular</li>
+                <li>Reducción del estrés</li>
+                <li>Sensación de descanso físico y mental</li>
+                <li>Mejora del bienestar general</li>
+                <li>Mayor conexión con el propio cuerpo</li>
+                <li>Experiencia de relajación profunda</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-3">¿Por qué muchas personas buscan masajistas profesionales?</h2>
+              <p className="mb-3">
+                Quienes buscan masajistas profesionales en Argentina suelen valorar tres cosas principales: seriedad, higiene y buena atención. Una experiencia positiva no depende solo de la técnica, sino también del entorno, el trato y la confianza que transmite el servicio.
+              </p>
+              <p className="mb-2">Por eso, un perfil bien posicionado debe comunicar con claridad:</p>
+              <ul className="list-disc list-inside space-y-1 pl-2 text-white/60">
+                <li>Qué tipo de masajes se ofrecen</li>
+                <li>En qué zona se trabaja</li>
+                <li>Cómo se reserva</li>
+                <li>Qué días y horarios están disponibles</li>
+                <li>Qué distingue al servicio frente a otros</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-3">Diferencias entre masajes relajantes, descontracturantes y terapéuticos</h2>
+              <p className="mb-3">Muchas personas buscan estas palabras como si fueran lo mismo, pero no lo son:</p>
+              <ul className="list-disc list-inside space-y-1 pl-2 text-white/60">
+                <li><span className="text-white/80 font-medium">Masaje relajante:</span> orientado al descanso, la calma y la desconexión.</li>
+                <li><span className="text-white/80 font-medium">Masaje descontracturante:</span> enfocado en reducir tensión muscular y contracturas.</li>
+                <li><span className="text-white/80 font-medium">Masaje terapéutico:</span> apunta a necesidades físicas más específicas según cada caso.</li>
+              </ul>
+            </div>
+
+            <div>
+              <h2 className="text-lg font-semibold text-white mb-4">Preguntas frecuentes sobre masajes</h2>
+              <div className="space-y-4">
+                {[
+                  { q: '¿Qué masaje me conviene si tengo mucho estrés?', a: 'Generalmente, un masaje relajante suele ser una de las opciones más elegidas para bajar el estrés y recuperar sensación de bienestar.' },
+                  { q: '¿Qué masaje se recomienda para contracturas?', a: 'El masaje descontracturante suele ser el más buscado cuando hay tensión muscular en espalda, cuello u hombros.' },
+                  { q: '¿Cuánto dura una sesión de masaje?', a: 'Depende del profesional y del servicio, pero muchas sesiones duran entre 45 y 90 minutos.' },
+                  { q: '¿Se puede pedir masaje a domicilio?', a: 'Sí, muchos profesionales ofrecen masajes a domicilio, especialmente en grandes ciudades.' },
+                  { q: '¿Conviene reservar con anticipación?', a: 'Sí, especialmente en horarios pico o fines de semana.' },
+                  { q: '¿Qué zonas del cuerpo suelen trabajarse más?', a: 'Espalda, hombros, cuello, piernas y pies suelen ser de las áreas más consultadas.' },
+                ].map(({ q, a }) => (
+                  <div key={q} className="border-t border-white/10 pt-4">
+                    <h3 className="font-semibold text-white/90 mb-1">{q}</h3>
+                    <p>{a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </section>
+
       </main>
     </div>
   )
