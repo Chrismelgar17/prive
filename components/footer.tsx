@@ -12,9 +12,16 @@ export function Footer() {
 
           {/* Column 1 — Brand */}
           <div className="sm:col-span-2 lg:col-span-1">
-            <span className="font-serif text-xl font-light tracking-[0.25em] text-white uppercase">
-              Privé Relax
-            </span>
+            <Link href="/" className="inline-block">
+              <img
+                src="/logo.jpeg"
+                alt="Privé Relax"
+                width={52}
+                height={52}
+                loading="lazy"
+                className="h-12 w-12 object-contain rounded-full"
+              />
+            </Link>
             <p className="mt-3 text-xs text-white/40 leading-relaxed max-w-xs">
               Directorio de masajistas profesionales en Buenos Aires y CABA.
               No intermediamos en pagos ni acuerdos entre partes.

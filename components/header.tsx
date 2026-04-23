@@ -5,15 +5,20 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-background/95 backdrop-blur h-16">
       <div className="mx-auto flex h-full max-w-7xl items-center px-4 sm:px-6 lg:px-8">
-        {/* Left spacer — fixed width mirrors the button width so logo stays centered */}
+        {/* Left spacer — mirrors button width so logo stays centered */}
         <div className="w-[90px] sm:w-[110px] shrink-0" />
 
         {/* Centered Logo */}
-        <Link
-          href="/"
-          className="flex-1 text-center font-serif text-xl sm:text-2xl font-light tracking-[0.15em] sm:tracking-[0.25em] text-white uppercase whitespace-nowrap"
-        >
-          Privé Relax
+        <Link href="/" className="flex-1 flex justify-center items-center">
+          <img
+            src="/logo.jpeg"
+            alt="Privé Relax"
+            width={44}
+            height={44}
+            className="h-10 w-10 sm:h-11 sm:w-11 object-contain rounded-full"
+            fetchPriority="high"
+            loading="eager"
+          />
         </Link>
 
         {/* Right CTA Button — fixed width matches left spacer */}

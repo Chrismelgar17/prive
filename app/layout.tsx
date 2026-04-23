@@ -31,7 +31,7 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'Privé Relax',
   url: SITE_URL,
-  logo: `${SITE_URL}/icon.svg`,
+  logo: `${SITE_URL}/logo.jpeg`,
   description: 'Directorio de masajistas profesionales en Buenos Aires y CABA',
 }
 
