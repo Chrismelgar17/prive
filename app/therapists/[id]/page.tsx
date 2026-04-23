@@ -1,7 +1,8 @@
 'use client'
-import { use, useState, useEffect } from 'react'
+import { use, useState, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import { ArrowLeft, MapPin, MessageCircle, Home, Building, Check, Star, ShieldCheck, ChevronLeft, ChevronRight, Clock, CalendarDays } from 'lucide-react'
+import { ArrowLeft, MapPin, Home, Building, Check, Star, ShieldCheck, ChevronLeft, ChevronRight, Clock, CalendarDays } from 'lucide-react'
+import { track } from '@vercel/analytics'
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
 import { MEMBERSHIP_LEVELS, Therapist } from '@/lib/mock-data'
@@ -13,9 +14,11 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   const [activePhoto, setActivePhoto] = useState(0)
 
   useEffect(() => {
-    getProfiles().then(profiles =>
-      setTherapist(profiles.find(t => t.id === id || id.startsWith(t.id + '-')))
-    )
+    getProfiles().then(profiles => {
+      const found = profiles.find(t => t.id === id || id.startsWith(t.id + '-'))
+      setTherapist(found)
+      if (found) track('view_profile', { therapist_id: found.id, neighborhood: found.neighborhood })
+    })
   }, [id])
 
   if (therapist === undefined) return (
@@ -36,6 +39,10 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   const averageRating = therapist.reviews && therapist.reviews.length > 0
     ? Math.round((therapist.reviews.reduce((acc, r) => acc + r.rating, 0) / therapist.reviews.length) * 10) / 10
     : 0
+
+  const handleWhatsAppClick = useCallback(() => {
+    track('click_whatsapp', { therapist_id: therapist.id, neighborhood: therapist.neighborhood })
+  }, [therapist.id, therapist.neighborhood])
 
   const modalityIcon = (m: string) => {
     if (m === 'Lugar propio') return <Home className="h-3.5 w-3.5 text-[#D4AF37]" />
@@ -238,6 +245,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={handleWhatsAppClick}
                 className="relative flex items-center justify-center gap-3 w-full bg-[#25D366] hover:bg-[#1db954] text-white font-bold py-4 px-5 rounded-xl shadow-[0_0_24px_0_rgba(37,211,102,0.35)] hover:shadow-[0_0_32px_0_rgba(37,211,102,0.55)] transition-all duration-300 text-base group overflow-hidden"
               >
                 <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/15 to-transparent" />
@@ -285,6 +293,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
           href={whatsappUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={handleWhatsAppClick}
           className="relative flex items-center justify-between w-full bg-[#25D366] hover:bg-[#1db954] text-white font-bold py-4 px-5 rounded-2xl shadow-[0_0_28px_0_rgba(37,211,102,0.45)] transition-all duration-300 overflow-hidden group"
         >
           <div className="absolute inset-0 -translate-x-full group-active:translate-x-full transition-transform duration-500 bg-gradient-to-r from-transparent via-white/20 to-transparent" />
