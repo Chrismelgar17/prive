@@ -1,5 +1,5 @@
 'use client'
-import { use, useState, useEffect, useCallback } from 'react'
+import { use, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, MapPin, Home, Building, Check, Star, ShieldCheck, ChevronLeft, ChevronRight, Clock, CalendarDays } from 'lucide-react'
 import { track } from '@vercel/analytics'
@@ -40,9 +40,9 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
     ? Math.round((therapist.reviews.reduce((acc, r) => acc + r.rating, 0) / therapist.reviews.length) * 10) / 10
     : 0
 
-  const handleWhatsAppClick = useCallback(() => {
+  const handleWhatsAppClick = () => {
     track('click_whatsapp', { therapist_id: therapist.id, neighborhood: therapist.neighborhood })
-  }, [therapist.id, therapist.neighborhood])
+  }
 
   const modalityIcon = (m: string) => {
     if (m === 'Lugar propio') return <Home className="h-3.5 w-3.5 text-[#D4AF37]" />
