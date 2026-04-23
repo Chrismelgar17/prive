@@ -3,7 +3,7 @@ import { ZonePageClient } from '@/components/zone-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajistas en Belgrano',
-  description: 'Encontrá masajistas profesionales en Belgrano, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología en CABA.',
+  description: 'Explorá masajistas profesionales en Belgrano. Encontrá perfiles por tipo de masaje, modalidad de atención y disponibilidad en Privé Relax.',
   alternates: { canonical: '/belgrano' },
 }
 
@@ -41,7 +41,7 @@ export default function BelgranoPage() {
     <ZonePageClient
       neighborhood="Belgrano"
       h1="Masajistas en Belgrano"
-      description="Encontrá masajistas profesionales en Belgrano, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología."
+      description="Encontrá masajistas profesionales en Belgrano. Explorá perfiles según el tipo de masaje, modalidad de atención y disponibilidad actual en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

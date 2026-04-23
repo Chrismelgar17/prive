@@ -48,7 +48,11 @@ export function MosaicCard({ therapist }: { therapist: Therapist }) {
     >
       <img
         src={therapist.photo_url}
-        alt={therapist.name}
+        alt={`${therapist.name} — masajista en ${therapist.neighborhood}`}
+        width={300}
+        height={375}
+        loading="lazy"
+        decoding="async"
         className="absolute inset-0 h-full w-full object-cover transition-transform group-hover:scale-105"
       />
       <div className="absolute left-1 top-1 z-10">

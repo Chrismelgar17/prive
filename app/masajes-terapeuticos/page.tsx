@@ -3,7 +3,7 @@ import { CategoryPageClient } from '@/components/category-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajes Terapéuticos en Buenos Aires',
-  description: 'Encontrá masajistas especializadas en masajes terapéuticos en Buenos Aires y CABA. Perfiles con técnicas enfocadas en bienestar físico y recuperación muscular.',
+  description: 'Explorá perfiles de masajes terapéuticos en Buenos Aires y CABA. Encontrá opciones por zona y modalidad de atención en Privé Relax.',
   alternates: { canonical: '/masajes-terapeuticos' },
 }
 
@@ -50,7 +50,7 @@ export default function MasajesTerapeuticosPage() {
       category="Terapéutico"
       slug="masajes-terapeuticos"
       h1="Masajes Terapéuticos en Buenos Aires"
-      description="Encontrá masajistas especializadas en masajes terapéuticos en Buenos Aires y CABA. Técnicas orientadas al bienestar físico y la recuperación muscular."
+      description="Encontrá perfiles de masajes terapéuticos en Buenos Aires y CABA. Explorá opciones por barrio, modalidad de atención y disponibilidad en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

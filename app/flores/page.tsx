@@ -3,7 +3,7 @@ import { ZonePageClient } from '@/components/zone-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajistas en Flores',
-  description: 'Encontrá masajistas profesionales en Flores, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología en CABA.',
+  description: 'Explorá masajistas profesionales en Flores. Encontrá perfiles por tipo de masaje, modalidad de atención y disponibilidad en Privé Relax.',
   alternates: { canonical: '/flores' },
 }
 
@@ -41,7 +41,7 @@ export default function FloresPage() {
     <ZonePageClient
       neighborhood="Flores"
       h1="Masajistas en Flores"
-      description="Encontrá masajistas profesionales en Flores, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología."
+      description="Encontrá masajistas profesionales en Flores. Explorá perfiles según el tipo de masaje, modalidad de atención y disponibilidad actual en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

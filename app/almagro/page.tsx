@@ -3,7 +3,7 @@ import { ZonePageClient } from '@/components/zone-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajistas en Almagro',
-  description: 'Encontrá masajistas profesionales en Almagro, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología en CABA.',
+  description: 'Explorá masajistas profesionales en Almagro. Encontrá perfiles por tipo de masaje, modalidad de atención y disponibilidad en Privé Relax.',
   alternates: { canonical: '/almagro' },
 }
 
@@ -41,7 +41,7 @@ export default function AlmagroPage() {
     <ZonePageClient
       neighborhood="Almagro"
       h1="Masajistas en Almagro"
-      description="Encontrá masajistas profesionales en Almagro, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología."
+      description="Encontrá masajistas profesionales en Almagro. Explorá perfiles según el tipo de masaje, modalidad de atención y disponibilidad actual en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

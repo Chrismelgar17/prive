@@ -65,7 +65,11 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
             <div className="relative aspect-[4/5] rounded-xl overflow-hidden ring-1 ring-[#D4AF37]/40 mb-3 shadow-xl">
               <img
                 src={allPhotos[activePhoto]}
-                alt={therapist.name}
+                alt={`${therapist.name} — masajista en ${therapist.neighborhood}`}
+                width={600}
+                height={750}
+                loading="eager"
+                fetchPriority="high"
                 className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
               />
               <div className="absolute top-4 right-4 bg-black/80 backdrop-blur-sm px-3 py-1 rounded-md border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
@@ -113,7 +117,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
                       i === activePhoto ? 'ring-[#D4AF37] opacity-100' : 'ring-white/10 opacity-50 hover:opacity-80'
                     }`}
                   >
-                    <img src={photo} alt={`Foto ${i + 1}`} className="absolute inset-0 w-full h-full object-cover" />
+                    <img src={photo} alt={`Foto ${i + 1} de ${therapist.name}`} width={80} height={80} loading="lazy" decoding="async" className="absolute inset-0 w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

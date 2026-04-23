@@ -3,7 +3,7 @@ import { ZonePageClient } from '@/components/zone-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajistas en Recoleta',
-  description: 'Encontrá masajistas profesionales en Recoleta, Buenos Aires. Perfiles con servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología.',
+  description: 'Explorá masajistas profesionales en Recoleta. Encontrá perfiles por tipo de masaje, modalidad de atención y disponibilidad en Privé Relax.',
   alternates: { canonical: '/recoleta' },
 }
 
@@ -41,7 +41,7 @@ export default function RecoletaPage() {
     <ZonePageClient
       neighborhood="Recoleta"
       h1="Masajistas en Recoleta"
-      description="Encontrá masajistas profesionales en Recoleta, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología."
+      description="Encontrá masajistas profesionales en Recoleta. Explorá perfiles según el tipo de masaje, modalidad de atención y disponibilidad actual en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

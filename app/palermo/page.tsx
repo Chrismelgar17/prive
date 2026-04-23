@@ -3,7 +3,7 @@ import { ZonePageClient } from '@/components/zone-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajistas en Palermo',
-  description: 'Encontrá masajistas profesionales en Palermo, Buenos Aires. Perfiles verificados con servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología.',
+  description: 'Explorá masajistas profesionales en Palermo. Encontrá perfiles por tipo de masaje, modalidad de atención y disponibilidad en Privé Relax.',
   alternates: { canonical: '/palermo' },
 }
 
@@ -45,7 +45,7 @@ export default function PalermoPage() {
     <ZonePageClient
       neighborhood="Palermo"
       h1="Masajistas en Palermo"
-      description="Encontrá masajistas profesionales en Palermo, Buenos Aires. Servicios de masajes relajantes, descontracturantes, terapéuticos y reflexología."
+      description="Encontrá masajistas profesionales en Palermo. Explorá perfiles según el tipo de masaje, modalidad de atención y disponibilidad actual en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

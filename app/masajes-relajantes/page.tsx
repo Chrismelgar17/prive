@@ -3,7 +3,7 @@ import { CategoryPageClient } from '@/components/category-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajes Relajantes en Buenos Aires',
-  description: 'Encontrá masajistas especializadas en masajes relajantes en Buenos Aires y CABA. Perfiles verificados con atención en local, hotel o a domicilio.',
+  description: 'Explorá perfiles de masajes relajantes en Buenos Aires y CABA. Encontrá opciones por zona y modalidad de atención en Privé Relax.',
   alternates: { canonical: '/masajes-relajantes' },
 }
 
@@ -50,7 +50,7 @@ export default function MasajesRelajantesPage() {
       category="Relajante"
       slug="masajes-relajantes"
       h1="Masajes Relajantes en Buenos Aires"
-      description="Encontrá masajistas especializadas en masajes relajantes en Buenos Aires y CABA. Servicios de relajación profunda, alivio del estrés y bienestar."
+      description="Encontrá perfiles de masajes relajantes en Buenos Aires y CABA. Explorá opciones por barrio, modalidad de atención y disponibilidad en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

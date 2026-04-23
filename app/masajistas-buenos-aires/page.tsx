@@ -4,7 +4,7 @@ import { Header } from '@/components/header'
 
 export const metadata: Metadata = {
   title: 'Masajistas en Buenos Aires',
-  description: 'Directorio de masajistas profesionales en Buenos Aires y CABA. Explorá perfiles por barrio, tipo de masaje y modalidad de atención. Contacto directo por WhatsApp.',
+  description: 'Encontrá masajistas profesionales en Buenos Aires y CABA. Explorá perfiles por barrio, tipo de masaje y modalidad de atención en Privé Relax.',
   alternates: { canonical: '/masajistas-buenos-aires' },
 }
 

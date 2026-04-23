@@ -3,7 +3,7 @@ import { CategoryPageClient } from '@/components/category-page-client'
 
 export const metadata: Metadata = {
   title: 'Reflexología en Buenos Aires',
-  description: 'Encontrá especialistas en reflexología podal en Buenos Aires y CABA. Técnica de bienestar basada en puntos reflejos de los pies. Perfiles con atención personalizada.',
+  description: 'Explorá perfiles de reflexología en Buenos Aires y CABA. Encontrá opciones por zona y modalidad de atención en Privé Relax.',
   alternates: { canonical: '/reflexologia' },
 }
 
@@ -51,7 +51,7 @@ export default function ReflexologiaPage() {
       category="Reflexología"
       slug="reflexologia"
       h1="Reflexología en Buenos Aires"
-      description="Encontrá especialistas en reflexología podal en Buenos Aires y CABA. Técnica de bienestar con atención personalizada en distintos barrios de la ciudad."
+      description="Encontrá perfiles de reflexología en Buenos Aires y CABA. Explorá opciones por barrio, modalidad de atención y disponibilidad en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

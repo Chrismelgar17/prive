@@ -3,7 +3,7 @@ import { CategoryPageClient } from '@/components/category-page-client'
 
 export const metadata: Metadata = {
   title: 'Masajes Descontracturantes en Buenos Aires',
-  description: 'Encontrá masajistas especializadas en masajes descontracturantes en Buenos Aires y CABA. Alivio de contracturas en espalda, cuello y hombros.',
+  description: 'Explorá perfiles de masajes descontracturantes en Buenos Aires y CABA. Encontrá opciones por zona y modalidad de atención en Privé Relax.',
   alternates: { canonical: '/masajes-descontracturantes' },
 }
 
@@ -49,7 +49,7 @@ export default function MasajesDescontracturantesPage() {
       category="Descontracturante"
       slug="masajes-descontracturantes"
       h1="Masajes Descontracturantes en Buenos Aires"
-      description="Encontrá masajistas especializadas en masajes descontracturantes en Buenos Aires y CABA. Alivio de contracturas en espalda, cuello, hombros y lumbares."
+      description="Encontrá perfiles de masajes descontracturantes en Buenos Aires y CABA. Explorá opciones por barrio, modalidad de atención y disponibilidad en Privé Relax."
       seoContent={seoContent}
       breadcrumbSchema={breadcrumbSchema}
     />

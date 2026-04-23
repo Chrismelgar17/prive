@@ -17,8 +17,6 @@ const ZONES = [
   { label: 'Masajistas en Recoleta', href: '/recoleta' },
   { label: 'Masajistas en Belgrano', href: '/belgrano' },
   { label: 'Masajistas en Caballito', href: '/caballito' },
-  { label: 'Masajistas en Almagro', href: '/almagro' },
-  { label: 'Masajistas en Flores', href: '/flores' },
 ]
 
 const CATEGORIES_LINKS = [
@@ -159,10 +157,6 @@ export default function HomeClient() {
               </div>
             </div>
 
-            {/* Short legal notice — required for compliance, minimal footprint */}
-            <p className="text-[10px] text-white/25 mt-1">
-              Plataforma de masoterapia, relajación y bienestar. No se permiten servicios íntimos ni de acompañamiento.
-            </p>
           </div>
         </section>
 
@@ -220,11 +214,6 @@ export default function HomeClient() {
                     </Link>
                   </li>
                 ))}
-                <li>
-                  <Link href="/masajistas-buenos-aires" className="text-sm text-white/65 hover:text-[#D4AF37] transition-colors">
-                    Masajistas en Buenos Aires
-                  </Link>
-                </li>
               </ul>
             </div>
           </div>
@@ -341,6 +330,17 @@ export default function HomeClient() {
 
           </div>
         </section>
+
+        {/* Legal disclaimer — bottom of page */}
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 pb-10">
+          <div className="flex items-start gap-3 bg-black/20 border border-white/8 rounded-xl px-5 py-4 text-xs text-white/40 leading-relaxed">
+            <svg className="h-4 w-4 text-white/30 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <p>
+              <strong className="text-white/50">Privé Relax</strong> es una plataforma de difusión de servicios profesionales de masoterapia, relajación y bienestar.
+              {' '}No se admiten servicios íntimos ni de acompañamiento.
+            </p>
+          </div>
+        </div>
 
       </main>
     </div>
