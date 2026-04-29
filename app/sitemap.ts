@@ -94,6 +94,16 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.3,
     },
+    // Landing page Google Ads (noindex — no incluir en sitemap público)
+    // /masajes-profesionales-caba es noindex, no va en sitemap
+
+    // Página SEO CABA
+    {
+      url: `${BASE}/masajes-caba`,
+      lastModified: now,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    },
     // Blog
     {
       url: `${BASE}/blog`,
