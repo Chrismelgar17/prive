@@ -9,20 +9,41 @@ const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.priverelax.com'
 
+const DEFAULT_TITLE = 'Masajistas en Buenos Aires y CABA | Privé Relax'
+const DEFAULT_DESCRIPTION = 'Encontrá masajistas profesionales en Buenos Aires y CABA. Explorá perfiles por barrio, tipo de masaje y modalidad de atención en Privé Relax.'
+
 export const metadata: Metadata = {
   title: {
     template: '%s | Privé Relax',
-    default: 'Masajistas en Buenos Aires y CABA | Privé Relax',
+    default: DEFAULT_TITLE,
   },
-  description: 'Encontrá masajistas profesionales en Buenos Aires y CABA. Explorá perfiles por barrio, tipo de masaje y modalidad de atención en Privé Relax.',
+  description: DEFAULT_DESCRIPTION,
   metadataBase: new URL(SITE_URL),
   icons: {
     icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/logo.jpeg' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/logo.jpeg',
+  },
+  openGraph: {
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    url: SITE_URL,
+    siteName: 'Privé Relax',
+    images: [{ url: '/logo.jpeg', width: 400, height: 400, alt: 'Privé Relax' }],
+    locale: 'es_AR',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary',
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    images: ['/logo.jpeg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 }
 

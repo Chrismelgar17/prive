@@ -8,17 +8,20 @@ export function Header() {
         {/* Left spacer — mirrors button width so logo stays centered */}
         <div className="w-[90px] sm:w-[110px] shrink-0" />
 
-        {/* Centered Logo */}
-        <Link href="/" className="flex-1 flex justify-center items-center">
+        {/* Centered Logo + Brand Name */}
+        <Link href="/" className="flex-1 flex justify-center items-center gap-2.5">
           <img
             src="/logo.jpeg"
             alt="Privé Relax"
             width={44}
             height={44}
-            className="h-10 w-10 sm:h-11 sm:w-11 object-contain rounded-full"
+            className="h-10 w-10 sm:h-11 sm:w-11 object-contain rounded-full shrink-0"
             fetchPriority="high"
             loading="eager"
           />
+          <span className="font-semibold text-white text-sm sm:text-base tracking-wide">
+            Privé Relax
+          </span>
         </Link>
 
         {/* Right CTA Button — fixed width matches left spacer */}

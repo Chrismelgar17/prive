@@ -64,6 +64,7 @@ export function Footer() {
             </h3>
             <nav className="flex flex-col gap-2.5">
               <Link href="/" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Inicio</Link>
+              <Link href="/blog" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Blog</Link>
               <Link href="/login" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Publicar anuncio</Link>
               <Link href="/dashboard" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Mi cuenta</Link>
               <Link href="/terminos" className="text-xs text-white/55 hover:text-[#D4AF37] transition-colors">Términos y Condiciones</Link>

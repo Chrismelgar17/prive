@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
+import { BLOG_POSTS } from '@/lib/blog-posts'
 
-const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://priverelax.com'
+const BASE = process.env.NEXT_PUBLIC_SITE_URL || 'https://www.priverelax.com'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date()
@@ -93,5 +94,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly',
       priority: 0.3,
     },
+    // Blog
+    {
+      url: `${BASE}/blog`,
+      lastModified: now,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+    ...BLOG_POSTS.map((post) => ({
+      url: `${BASE}/blog/${post.slug}`,
+      lastModified: new Date(post.date),
+      changeFrequency: 'monthly' as const,
+      priority: 0.6,
+    })),
   ]
 }
