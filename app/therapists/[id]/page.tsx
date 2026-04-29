@@ -3,6 +3,7 @@ import { use, useState, useEffect } from 'react'
 import Link from 'next/link'
 import { ArrowLeft, MapPin, Home, Building, Check, Star, ShieldCheck, ChevronLeft, ChevronRight, Clock, CalendarDays } from 'lucide-react'
 import { track } from '@vercel/analytics'
+import { trackConversion } from '@/lib/gtag'
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
 import { MEMBERSHIP_LEVELS, Therapist } from '@/lib/mock-data'
@@ -46,6 +47,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
   const handleWhatsAppClick = () => {
     track('click_whatsapp', { therapist_id: therapist.id, neighborhood: therapist.neighborhood })
     incrementWhatsappClick(therapist.id)
+    trackConversion()
   }
 
   const modalityIcon = (m: string) => {

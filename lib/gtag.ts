@@ -5,7 +5,7 @@ declare global {
   }
 }
 
-const CONVERSION_TARGET = 'AW-18076913641/sjNwCNzmvaQcEOmf36tD'
+const CONVERSION_TARGET = 'AW-18076913641/yx05CIDlvaQcEOmf36tD'
 
 export function trackConversion(redirectUrl?: string) {
   if (typeof window === 'undefined' || !window.gtag) return
