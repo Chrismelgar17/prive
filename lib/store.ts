@@ -116,6 +116,64 @@ export async function uploadPhoto(file: File): Promise<string> {
   return urlData.publicUrl
 }
 
+// ─── Stats: atomic increments ────────────────────────────────────────────────
+
+const VIEWED_KEY = 'prive_viewed_v1'
+
+function getViewedSet(): Set<string> {
+  if (typeof window === 'undefined') return new Set()
+  try {
+    const raw = sessionStorage.getItem(VIEWED_KEY)
+    return new Set(raw ? JSON.parse(raw) : [])
+  } catch { return new Set() }
+}
+
+function markViewed(id: string): void {
+  if (typeof window === 'undefined') return
+  try {
+    const set = getViewedSet()
+    set.add(id)
+    sessionStorage.setItem(VIEWED_KEY, JSON.stringify([...set]))
+  } catch {}
+}
+
+export async function incrementProfileView(id: string): Promise<void> {
+  // Deduplicate: only count once per browser session per profile
+  if (getViewedSet().has(id)) return
+  markViewed(id)
+  try {
+    const { data, error } = await supabase
+      .from('therapists')
+      .select('profile_views')
+      .eq('id', id)
+      .single()
+    if (error || data === null) return
+    await supabase
+      .from('therapists')
+      .update({ profile_views: (data.profile_views ?? 0) + 1 })
+      .eq('id', id)
+  } catch (err) {
+    console.error('[incrementProfileView]', err)
+  }
+}
+
+export async function incrementWhatsappClick(id: string): Promise<void> {
+  try {
+    const { data, error } = await supabase
+      .from('therapists')
+      .select('whatsapp_clicks')
+      .eq('id', id)
+      .single()
+    if (error || data === null) return
+    await supabase
+      .from('therapists')
+      .update({ whatsapp_clicks: (data.whatsapp_clicks ?? 0) + 1 })
+      .eq('id', id)
+  } catch (err) {
+    console.error('[incrementWhatsappClick]', err)
+  }
+}
+
 // ─── Settings (localStorage) ──────────────────────────────────────────────────
 
 export interface AdminSettings {
@@ -130,7 +188,7 @@ const AUTH_KEY = 'prive_admin_auth'
 const DEFAULT_SETTINGS: AdminSettings = {
   ownerWhatsapp: '',
   ownerEmail: '',
-  adminPassword: 'Pr1v3@Adm1n#2026!',
+  adminPassword: process.env.NEXT_PUBLIC_ADMIN_PASSWORD ?? '',
 }
 
 function isBrowser() { return typeof window !== 'undefined' }

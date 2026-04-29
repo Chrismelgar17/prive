@@ -104,9 +104,9 @@ export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [passwordInput, setPasswordInput] = useState('')
   const [passwordError, setPasswordError] = useState('')
-  const [settings, setSettings] = useState<AdminSettings>({ ownerWhatsapp: '', ownerEmail: '', adminPassword: 'Pr1v3@Adm1n#2026!' })
+  const [settings, setSettings] = useState<AdminSettings>(getSettings)
   const [showSettings, setShowSettings] = useState(false)
-  const [settingsForm, setSettingsForm] = useState<AdminSettings>({ ownerWhatsapp: '', ownerEmail: '', adminPassword: 'Pr1v3@Adm1n#2026!' })
+  const [settingsForm, setSettingsForm] = useState<AdminSettings>(getSettings)
 
   useEffect(() => {
     const s = getSettings()

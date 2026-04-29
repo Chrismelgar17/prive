@@ -6,7 +6,7 @@ import { track } from '@vercel/analytics'
 import { Header } from '@/components/header'
 import { StarRating } from '@/components/star-rating'
 import { MEMBERSHIP_LEVELS, Therapist } from '@/lib/mock-data'
-import { getProfiles } from '@/lib/store'
+import { getProfiles, incrementProfileView, incrementWhatsappClick } from '@/lib/store'
 
 export default function TherapistProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -17,7 +17,10 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
     getProfiles().then(profiles => {
       const found = profiles.find(t => t.id === id || id.startsWith(t.id + '-'))
       setTherapist(found)
-      if (found) track('view_profile', { therapist_id: found.id, neighborhood: found.neighborhood })
+      if (found) {
+        track('view_profile', { therapist_id: found.id, neighborhood: found.neighborhood })
+        incrementProfileView(found.id)
+      }
     })
   }, [id])
 
@@ -42,6 +45,7 @@ export default function TherapistProfilePage({ params }: { params: Promise<{ id:
 
   const handleWhatsAppClick = () => {
     track('click_whatsapp', { therapist_id: therapist.id, neighborhood: therapist.neighborhood })
+    incrementWhatsappClick(therapist.id)
   }
 
   const modalityIcon = (m: string) => {
