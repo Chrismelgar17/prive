@@ -102,7 +102,8 @@ export default function RootLayout({
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${GADS_ID}');
+            gtag('config', '${GADS_ID}', { allow_enhanced_conversions: true });
+            gtag('set', 'linker', { accept_incoming: true });
           `}
         </Script>
       </body>
